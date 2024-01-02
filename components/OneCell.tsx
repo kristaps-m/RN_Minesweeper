@@ -26,6 +26,17 @@ export default function TheOneCellComponent(props: oneCellProps) {
           ☠︎︎
         </Text>
       );
+    } else if (props.oneCellProps.isMine) {
+      return (
+        <>
+          <Text
+            style={[{ fontSize: 20, color: "blue" }, styles.oneCellTextDefault]}
+          >
+            {props.oneCellProps.isMine ? "X-X" : "c"}
+          </Text>
+          <Text>{`${props.oneCellProps.isRevealed}`}</Text>
+        </>
+      );
     } else {
       return (
         <Text
@@ -39,7 +50,8 @@ export default function TheOneCellComponent(props: oneCellProps) {
         >
           {props.oneCellProps.isMine ? "X" : "c"}
           {`${props.oneCellProps.isRevealed}`}
-          {`${props.oneCellProps.minesCount}`}
+          {props.oneCellProps.minesCount > 0 &&
+            `${props.oneCellProps.minesCount}`}
         </Text>
       );
     }
@@ -54,13 +66,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  cellText: {
-    fontSize: 20,
-  },
+  // cellText: {
+  //   fontSize: 20,
+  // },
   oneCellTextDefault: {
     alignContent: "center",
     justifyContent: "center",
-    fontSize: 10,
+    fontSize: 15,
   },
   oneCellRevealed: {
     color: "red",

@@ -14,6 +14,19 @@ interface oneCell {
 }
 
 export default function TabOneScreen() {
+  // const [gameField, setGameField] = useState(TheWowName(10));
+  const [minesInGame, setMinesInGame] = useState(10);
+  const [gameField, setGameField] = useState(
+    addMineCountNumbers(addMinesToField(minesInGame, TheWowName(10)))
+  );
+  const [isGameOver, setIsGameOver] = useState(false);
+  // const [cell, setCell] = useState({
+  //   row: 0,
+  //   col: 0,
+  //   isMine: false,
+  //   isRevealed: false,
+  //   minesCount: 0,
+  // });
   function TheWowName(params: number) {
     let resultArray = [];
     for (let row = 0; row < params; row++) {
@@ -73,32 +86,22 @@ export default function TabOneScreen() {
     return theGameField;
   }
 
-  // const [gameField, setGameField] = useState(TheWowName(10));
-  const [minesInGame, setMinesInGame] = useState(2);
-  const [gameField, setGameField] = useState(
-    addMineCountNumbers(addMinesToField(minesInGame, TheWowName(3)))
-  );
-  const [isGameOver, setIsGameOver] = useState(false);
-  // const [cell, setCell] = useState({
-  //   row: 0,
-  //   col: 0,
-  //   isMine: false,
-  //   isRevealed: false,
-  //   minesCount: 0,
-  // });
-
-  function countMinesAround(theGameField: oneCell[][]) {
+  function countMinesAround(
+    realRow: number,
+    realCol: number,
+    theGameField: oneCell[][]
+  ) {
     let minesAroundTheCell = 0;
-
+    // (5,5) OR // (3,3)0,0
     for (let row = -1; row <= 1; row++) {
       for (let col = -1; col <= 1; col++) {
         if (
-          row >= 0 &&
-          row < theGameField.length &&
-          col >= 0 &&
-          col < theGameField[0].length
+          row + realRow >= 0 &&
+          row + realRow < theGameField.length &&
+          col + realCol >= 0 &&
+          col + realCol < theGameField[0].length
         ) {
-          if (theGameField[row][col].isMine) {
+          if (theGameField[row + realRow][col + realCol].isMine) {
             minesAroundTheCell++;
           }
         }
@@ -107,14 +110,22 @@ export default function TabOneScreen() {
 
     return minesAroundTheCell;
   }
-
+  // if field is 9 x 9, active cell = 5:5, to check
+  /*
+  [(4,4) (4,5) (3,6)
+   (5,4) (5,5) (5,6)
+   (6,4) (6,5) (6,6)]
+   */
   function addMineCountNumbers(theGameField: oneCell[][]) {
     for (let row = 0; row < theGameField.length; row++) {
       for (let col = 0; col < theGameField.length; col++) {
-        // if (theGameField[row][col].isRevealed) {
-        //   gameCellsRevealed++;
-        // }
-        theGameField[row][col].minesCount = countMinesAround(theGameField);
+        if (theGameField[row][col].isMine === false) {
+          theGameField[row][col].minesCount = countMinesAround(
+            row,
+            col,
+            theGameField
+          );
+        }
       }
     }
 
@@ -205,8 +216,8 @@ export default function TabOneScreen() {
                 // padding: 10,
                 borderColor: "black",
                 borderWidth: 1,
-                width: 30,
-                height: 30,
+                width: 40,
+                height: 40,
                 alignContent: "center",
                 justifyContent: "center",
               }}
