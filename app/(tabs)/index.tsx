@@ -54,11 +54,12 @@ export default function TabOneScreen() {
     console.log(isGameOver);
     if (!isGameOver) {
       if (theOneCell.isMine) {
-        alert(
-          `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
-            theOneCell.row
-          }][${theOneCell.col}])`
-        );
+        // alert(
+        //   `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
+        //     theOneCell.row
+        //   }][${theOneCell.col}])`
+        // );
+        theOneCell.isRevealed = true;
         setIsGameOver(true);
         setHavePlayerWon(false);
       } else {
@@ -167,6 +168,7 @@ export default function TabOneScreen() {
                 height: 40,
                 alignContent: "center",
                 justifyContent: "center",
+                backgroundColor: `${oneCellFR.isRevealed ? "#abaaa9" : "gray"}`,
               }}
               onPress={() => clickCellHandler(oneCellFR)}
             >
