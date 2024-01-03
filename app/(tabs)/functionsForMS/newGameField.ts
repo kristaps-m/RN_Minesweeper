@@ -11,6 +11,7 @@ export default function generateNewGameFieldWithOnecellObjects(params: number) {
         isMine: false,
         isRevealed: false,
         minesCount: 0,
+        isFlaged: false,
       };
 
       tempRow.push(theOneCell);
