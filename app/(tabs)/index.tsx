@@ -11,7 +11,6 @@ import checkIfGameWon from "./functionsForMS/checkIfGameWon";
 import generateNewGameFieldWithOnecellObjects from "./functionsForMS/newGameField";
 
 export default function TabOneScreen() {
-  // const [gameField, setGameField] = useState(generateNewGameFieldWithOnecellObjects(10));
   const [minesInGame, setMinesInGame] = useState(10);
   const [gameField, setGameField] = useState(
     addMineCountNumbers(
@@ -21,31 +20,6 @@ export default function TabOneScreen() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [havePlayerWon, setHavePlayerWon] = useState(false);
 
-  // function clickCellHandler(theOneCell: IOneCell) {
-  //   console.log(isGameOver);
-  //   if (!isGameOver) {
-  //     if (theOneCell.isMine) {
-  //       alert(
-  //         `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
-  //           theOneCell.row
-  //         }][${theOneCell.col}])`
-  //       );
-  //       setIsGameOver(true);
-  //     } else {
-  //       setGameField((prevField) => {
-  //         const tempField = [...prevField];
-  //         tempField[theOneCell.row][theOneCell.col] = {
-  //           ...tempField[theOneCell.row][theOneCell.col],
-  //           isRevealed: true,
-  //           // isMine: true,
-  //         };
-  //         return tempField;
-  //       });
-  //       console.log("I clicked clickCellHandler", theOneCell);
-  //       console.log(gameField);
-  //     }
-  //   }
-  // }
   interface IQueueOneCell {
     row: number;
     col: number;
@@ -115,11 +89,6 @@ export default function TabOneScreen() {
     }
   }
 
-  // function addMinesHandler() {
-  //   let newMinedField = addMinesToField(10, gameField);
-  //   setGameField(newMinedField);
-  // }
-
   useEffect(() => {
     const isGameWon = checkIfGameWon(gameField, minesInGame);
     if (isGameWon) {
@@ -161,34 +130,24 @@ export default function TabOneScreen() {
             <Pressable
               key={`${oneCellFR.row}${oneCellFR.col}`}
               style={{
-                // padding: 10,
                 borderColor: "black",
                 borderWidth: 1,
                 width: 40,
                 height: 40,
+                flex: 1,
                 alignContent: "center",
                 justifyContent: "center",
                 backgroundColor: `${oneCellFR.isRevealed ? "#abaaa9" : "gray"}`,
               }}
               onPress={() => clickCellHandler(oneCellFR)}
             >
+              {/* <Text style={{ fontSize: 16, textAlign: "center" }}>
+                  {oneCellFR.minesCount}
+                </Text> */}
               <TheOneCellComponent
                 oneCellProps={oneCellFR}
                 isGameOver={isGameOver}
               />
-              {/* <Text
-                style={{
-                  alignContent: "center",
-                  justifyContent: "center",
-                  fontSize: 10,
-                  color: `${oneCellFR.isMine ? "red" : "green"}`,
-                  fontWeight: `${oneCellFR.isMine ? "bold" : "normal"}`,
-                }}
-              >
-                {oneCellFR.isMine ? "X" : "c"}
-                {`${oneCellFR.isRevealed}`}
-                {`${oneCellFR.isMine}`}
-              </Text> */}
             </Pressable>
           ))}
         </View>

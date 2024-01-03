@@ -44,16 +44,16 @@ export default function TheOneCellComponent(props: oneCellProps) {
         );
       }
     }
-    // else if (props.oneCellProps.isMine) {
+    // else if (c.isMine) {
     //   return (
     //     <>
     //       <Text>.</Text>
     //       {/* <Text
     //         style={[{ fontSize: 20, color: "blue" }, styles.oneCellTextDefault]}
     //       >
-    //         {props.oneCellProps.isMine ? "X-X" : "c"}
+    //         {c.isMine ? "X-X" : "c"}
     //       </Text>
-    //       <Text>{`${props.oneCellProps.isRevealed}`}</Text> */}
+    //       <Text>{`${c.isRevealed}`}</Text> */}
     //     </>
     //   );
     // }
@@ -63,9 +63,7 @@ export default function TheOneCellComponent(props: oneCellProps) {
           <Text
             style={[
               styles.oneCellTextDefault,
-              props.oneCellProps.isRevealed
-                ? styles.oneCellRevealed
-                : styles.oneCellClosed,
+              c.isRevealed ? styles.oneCellRevealed : styles.oneCellClosed,
             ]}
           >
             {c.minesCount}
@@ -78,17 +76,17 @@ export default function TheOneCellComponent(props: oneCellProps) {
       //   <Text
       //     style={[
       //       styles.oneCellTextDefault,
-      //       props.oneCellProps.isRevealed
+      //       c.isRevealed
       //         ? styles.oneCellRevealed
       //         : styles.oneCellClosed,
       //       // props.isGameOver && styles.isGameOverStyle,
       //     ]}
       //   >
       //     .
-      //     {/* {props.oneCellProps.isMine ? "X" : "c"}
-      //     {`${props.oneCellProps.isRevealed}`}
-      //     {props.oneCellProps.minesCount > 0 &&
-      //       `${props.oneCellProps.minesCount}`} */}
+      //     {/* {c.isMine ? "X" : "c"}
+      //     {`${c.isRevealed}`}
+      //     {c.minesCount > 0 &&
+      //       `${c.minesCount}`} */}
       //   </Text>
       // );
       // }
@@ -99,18 +97,14 @@ export default function TheOneCellComponent(props: oneCellProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
   // cellText: {
   //   fontSize: 20,
   // },
   oneCellTextDefault: {
-    alignContent: "center",
-    justifyContent: "center",
-    fontSize: 15,
+    // alignContent: "center",
+    // justifyContent: "center",
+    textAlign: "center",
+    fontSize: 20,
   },
   oneCellRevealed: {
     color: "red",
