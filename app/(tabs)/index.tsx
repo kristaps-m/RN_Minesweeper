@@ -15,17 +15,42 @@ export default function TabOneScreen() {
   const [minesInGame, setMinesInGame] = useState(10);
   const [gameField, setGameField] = useState(
     addMineCountNumbers(
-      addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(10))
+      addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(9))
     )
   );
   const [isGameOver, setIsGameOver] = useState(false);
+  const [havePlayerWon, setHavePlayerWon] = useState(false);
 
+  // function clickCellHandler(theOneCell: IOneCell) {
+  //   console.log(isGameOver);
+  //   if (!isGameOver) {
+  //     if (theOneCell.isMine) {
+  //       alert(
+  //         `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
+  //           theOneCell.row
+  //         }][${theOneCell.col}])`
+  //       );
+  //       setIsGameOver(true);
+  //     } else {
+  //       setGameField((prevField) => {
+  //         const tempField = [...prevField];
+  //         tempField[theOneCell.row][theOneCell.col] = {
+  //           ...tempField[theOneCell.row][theOneCell.col],
+  //           isRevealed: true,
+  //           // isMine: true,
+  //         };
+  //         return tempField;
+  //       });
+  //       console.log("I clicked clickCellHandler", theOneCell);
+  //       console.log(gameField);
+  //     }
+  //   }
+  // }
+  interface IQueueOneCell {
+    row: number;
+    col: number;
+  }
   function clickCellHandler(theOneCell: IOneCell) {
-    // // row: number, col: number
-    // let tempField = gameField;
-    // tempField[theOneCell.row][theOneCell.col].isRevealed = true;
-    // tempField[theOneCell.row][theOneCell.col].isMine = true;
-    // setGameField(tempField);
     console.log(isGameOver);
     if (!isGameOver) {
       if (theOneCell.isMine) {
@@ -35,16 +60,54 @@ export default function TabOneScreen() {
           }][${theOneCell.col}])`
         );
         setIsGameOver(true);
+        setHavePlayerWon(false);
       } else {
-        setGameField((prevField) => {
-          const tempField = [...prevField];
-          tempField[theOneCell.row][theOneCell.col] = {
-            ...tempField[theOneCell.row][theOneCell.col],
-            isRevealed: true,
-            // isMine: true,
-          };
-          return tempField;
-        });
+        const tempField = [...gameField];
+        const queue: IQueueOneCell[] = [{ ...theOneCell }]; // IOneCell[]
+
+        while (queue.length > 0) {
+          const currentCell = queue.pop();
+
+          if (currentCell) {
+            const { row, col } = currentCell;
+
+            // Check if the cell is already revealed
+            if (!tempField[row][col].isRevealed) {
+              tempField[row][col] = {
+                ...tempField[row][col],
+                isRevealed: true,
+              };
+
+              // If the neighboring mines count is 0, add adjacent cells to the queue
+              if (tempField[row][col].minesCount === 0) {
+                // Define adjacent positions
+                const directions = [
+                  { row: -1, col: 0 },
+                  { row: 1, col: 0 },
+                  { row: 0, col: -1 },
+                  { row: 0, col: 1 },
+                ];
+
+                // Add adjacent cells to the queue
+                for (const direction of directions) {
+                  const newRow = row + direction.row;
+                  const newCol = col + direction.col;
+
+                  if (
+                    newRow >= 0 &&
+                    newRow < tempField.length &&
+                    newCol >= 0 &&
+                    newCol < tempField[0].length
+                  ) {
+                    queue.push({ row: newRow, col: newCol });
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        setGameField(tempField);
         console.log("I clicked clickCellHandler", theOneCell);
         console.log(gameField);
       }
@@ -59,10 +122,21 @@ export default function TabOneScreen() {
   useEffect(() => {
     const isGameWon = checkIfGameWon(gameField, minesInGame);
     if (isGameWon) {
-      alert("You are MINEsweeper Pro!");
       setIsGameOver(true);
+      setHavePlayerWon(true);
+      alert("You are MINEsweeper Pro!");
     }
   });
+
+  const textToDisplayAboveField = () => {
+    if (isGameOver && havePlayerWon) {
+      return "Amazing You Have Won!";
+    } else if (isGameOver && !havePlayerWon) {
+      return "--- GAME OVER ---\n   --- You Lost! ---";
+    } else {
+      return "Keep Finding Those Mines!";
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -74,7 +148,7 @@ export default function TabOneScreen() {
             color: "blue",
           }}
         >
-          {isGameOver ? "--- GAME OVER ---" : "Keep Finding Those Mines!"}
+          {textToDisplayAboveField()}
         </Text>
       </View>
       {/* <View>

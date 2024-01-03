@@ -14,7 +14,7 @@ interface oneCell {
 }
 
 export default function TheOneCellComponent(props: oneCellProps) {
-  function name(oneCell: oneCell) {
+  function textReturnFunction() {
     if (props.isGameOver && props.oneCellProps.isMine) {
       return (
         <Text
@@ -57,7 +57,7 @@ export default function TheOneCellComponent(props: oneCellProps) {
     }
   }
 
-  return <>{name(props.oneCellProps)}</>;
+  return <>{textReturnFunction()}</>;
 }
 
 const styles = StyleSheet.create({
