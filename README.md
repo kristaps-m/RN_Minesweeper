@@ -61,3 +61,23 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+### Hello :)
+
+```
+  // const [cell, setCell] = useState({
+  //   row: 0,
+  //   col: 0,
+  //   isMine: false,
+  //   isRevealed: false,
+  //   minesCount: 0,
+  // });
+
+  /*[
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+  ] */
+  // const testArray = generateNewGameFieldWithOnecellObjects(3);
+
+```
