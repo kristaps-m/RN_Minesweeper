@@ -13,7 +13,7 @@ export default function checkIfGameWon(
       }
     }
   }
-  // 8 == 2
+
   return (
     theGameField[0].length * theGameField.length - gameCellsRevealed ===
     minesInGame
