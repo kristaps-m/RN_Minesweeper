@@ -9,7 +9,7 @@ import addMinesToField from "./functionsForMS/addMinesToField";
 import addMineCountNumbers from "./functionsForMS/addMineCountNumbers";
 import checkIfGameWon from "./functionsForMS/checkIfGameWon";
 import generateNewGameFieldWithOnecellObjects from "./functionsForMS/newGameField";
-import countMines from "./functionsForMS/countMines";
+import countHowManyCellsAreFlaged from "./functionsForMS/countHowManyCellsAreFlaged";
 
 interface IQueueOneCell {
   row: number;
@@ -26,56 +26,32 @@ export default function TabOneScreen() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [havePlayerWon, setHavePlayerWon] = useState(false);
   const [isFlagToolActive, setFlagTool] = useState(false);
-  // TEST --------------------------------------------------------------------
-  const [theN, setTheN] = useState(minesInGame);
-  function plussOrMinusTheNHandler() {
-    let tempNum = theN;
-    if (isFlagToolActive) {
-      tempNum--;
-    } else {
-      tempNum++;
-    }
-    setTheN(tempNum);
-    setCellsFlaged(tempNum);
-  } // -----------------------------------------------------------------------
+
+  function createNewGameHandler() {
+    setGameField(
+      addMineCountNumbers(
+        addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(9))
+      )
+    );
+    setIsGameOver(false);
+    setHavePlayerWon(false);
+  }
+
   function flagToolHandler() {
     setFlagTool(!isFlagToolActive);
   }
 
-  function cellsFlagedNumberHandler(oneCell: IOneCell) {
-    let tempNumber = minesInGame;
-    if (!oneCell.isFlaged) {
-      tempNumber--;
-    } else {
-      tempNumber++;
-    }
-    setCellsFlaged(tempNumber);
-  }
-  // const r = (c: IOneCell) => {
-  //   return c.isFlaged ? c.isFlaged = false : c.isFlaged = true;
-  // };
   const r = (x: boolean) => {
     return !x;
   };
   function clickCellHandler(theOneCell: IOneCell) {
-    console.log(isGameOver);
     if (!isGameOver) {
       if (isFlagToolActive) {
         const tempField = [...gameField];
         tempField[theOneCell.row][theOneCell.col].isFlaged = r(
           tempField[theOneCell.row][theOneCell.col].isFlaged
         );
-        // var tempNum = minesInGame;
-        // if (!theOneCell.isFlaged) {
-        //   tempNum--;
-        // } else {
-        //   tempNum++;
-        // }
-        // cellsFlagedNumberHandler(theOneCell);
-        // plussOrMinusTheNHandler;
 
-        // setTheN(tempNum);
-        // setCellsFlaged(tempNum);
         setGameField(tempField);
       } else {
         if (theOneCell.isMine) {
@@ -134,8 +110,6 @@ export default function TabOneScreen() {
           }
 
           setGameField(tempField);
-          console.log("I clicked clickCellHandler", theOneCell);
-          console.log(gameField);
         }
       }
     }
@@ -149,18 +123,7 @@ export default function TabOneScreen() {
       alert("You are MINEsweeper Pro!");
     }
   });
-  function countHowManyCellsAreFlaged(theGameField: IOneCell[][]) {
-    let howManyCellsAreFlaged = 0;
-    for (let row = 0; row < theGameField.length; row++) {
-      for (let col = 0; col < theGameField.length; col++) {
-        if (theGameField[row][col].isFlaged) {
-          howManyCellsAreFlaged++;
-        }
-      }
-    }
 
-    return howManyCellsAreFlaged;
-  }
   useEffect(() => {
     const howManyRealMinesAreFlaged = countHowManyCellsAreFlaged(gameField);
     let tempMinesNr = minesInGame;
@@ -176,13 +139,12 @@ export default function TabOneScreen() {
       return "Keep Finding Those Mines!";
     }
   };
-  // for (let i = 0; i < gameField.length; i++) {
-  //   gameField[i][i].isFlaged = true;
-  // }
+
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 20 }}>
-        <Text>MINES in Beggining: {minesInGame}</Text>
+      <View style={{ marginBottom: 15 }}>
+        <Button title="NEW GAME?" onPress={createNewGameHandler} />
+        {/* <Text>MINES in Beggining: {minesInGame}</Text> */}
         <Text
           style={{
             fontSize: 25,
@@ -192,22 +154,24 @@ export default function TabOneScreen() {
         >
           {textToDisplayAboveField()}
         </Text>
-        <View style={{ flexDirection: "column" }}>
-          <Pressable onPress={plussOrMinusTheNHandler}>
-            <Text>{isFlagToolActive ? "--" : "++"}</Text>
-          </Pressable>
-          <Text style={{ padding: 10 }}>
-            theN={theN} minesInGame={minesInGame} cellsFlaged={cellsFlaged}
-          </Text>
-        </View>
       </View>
       {/* <View>
         <Button title="TEST" onPress={}></Button>
       </View> */}
       <View>
         <Button title="flagToolHandler" onPress={flagToolHandler} />
-        {`FLAG TOOL = ${isFlagToolActive}`}
-        {`MINES REMAINING? = ${cellsFlaged}`}
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ fontSize: 20 }}>⚙ </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "800",
+              marginRight: 10,
+              color: `${isFlagToolActive ? "green" : "red"}`,
+            }}
+          >{`${isFlagToolActive ? "Click to 'F'" : "Careful!!"}`}</Text>
+          <Text>{`MINES LEFT? = ${cellsFlaged}`}</Text>
+        </View>
       </View>
       {gameField.map((oneRow, index) => (
         <View key={index} style={styles.oneRowInGame}>
@@ -224,15 +188,8 @@ export default function TabOneScreen() {
                 justifyContent: "center",
                 backgroundColor: `${oneCellFR.isRevealed ? "#abaaa9" : "gray"}`,
               }}
-              // onPress={() => {
-              //   clickCellHandler(oneCellFR);
-              //   plussOrMinusTheNHandler;
-              // }}
               onPress={() => clickCellHandler(oneCellFR)}
             >
-              {/* <Text style={{ fontSize: 16, textAlign: "center" }}>
-                  {oneCellFR.minesCount}
-                </Text> */}
               <TheOneCellComponent
                 oneCellProps={oneCellFR}
                 isGameOver={isGameOver}
@@ -241,7 +198,16 @@ export default function TabOneScreen() {
           ))}
         </View>
       ))}
-      <Text>{`FLAG TOOL = ${isFlagToolActive}`}</Text>
+      {/* <View style={{ flexDirection: "row" }}>
+        <Text style={{ fontSize: 20 }}>FLAG TOOL = </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "800",
+            color: `${isFlagToolActive ? "green" : "red"}`,
+          }}
+        >{`${isFlagToolActive}`}</Text>
+      </View> */}
     </View>
   );
 }

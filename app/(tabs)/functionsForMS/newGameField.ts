@@ -1,5 +1,6 @@
 import IOneCell from "../../../components/models/IOneCell";
 
+// one argument then field = square ELSE two arguments
 export default function generateNewGameFieldWithOnecellObjects(params: number) {
   let resultArray = [];
   for (let row = 0; row < params; row++) {
