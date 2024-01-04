@@ -9,6 +9,7 @@ import addMinesToField from "./functionsForMS/addMinesToField";
 import addMineCountNumbers from "./functionsForMS/addMineCountNumbers";
 import checkIfGameWon from "./functionsForMS/checkIfGameWon";
 import generateNewGameFieldWithOnecellObjects from "./functionsForMS/newGameField";
+import countMines from "./functionsForMS/countMines";
 
 interface IQueueOneCell {
   row: number;
@@ -25,7 +26,18 @@ export default function TabOneScreen() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [havePlayerWon, setHavePlayerWon] = useState(false);
   const [isFlagToolActive, setFlagTool] = useState(false);
-
+  // TEST --------------------------------------------------------------------
+  const [theN, setTheN] = useState(minesInGame);
+  function plussOrMinusTheNHandler() {
+    let tempNum = theN;
+    if (isFlagToolActive) {
+      tempNum--;
+    } else {
+      tempNum++;
+    }
+    setTheN(tempNum);
+    setCellsFlaged(tempNum);
+  } // -----------------------------------------------------------------------
   function flagToolHandler() {
     setFlagTool(!isFlagToolActive);
   }
@@ -53,7 +65,17 @@ export default function TabOneScreen() {
         tempField[theOneCell.row][theOneCell.col].isFlaged = r(
           tempField[theOneCell.row][theOneCell.col].isFlaged
         );
+        // var tempNum = minesInGame;
+        // if (!theOneCell.isFlaged) {
+        //   tempNum--;
+        // } else {
+        //   tempNum++;
+        // }
         // cellsFlagedNumberHandler(theOneCell);
+        // plussOrMinusTheNHandler;
+
+        // setTheN(tempNum);
+        // setCellsFlaged(tempNum);
         setGameField(tempField);
       } else {
         if (theOneCell.isMine) {
@@ -127,6 +149,23 @@ export default function TabOneScreen() {
       alert("You are MINEsweeper Pro!");
     }
   });
+  function countHowManyCellsAreFlaged(theGameField: IOneCell[][]) {
+    let howManyCellsAreFlaged = 0;
+    for (let row = 0; row < theGameField.length; row++) {
+      for (let col = 0; col < theGameField.length; col++) {
+        if (theGameField[row][col].isFlaged) {
+          howManyCellsAreFlaged++;
+        }
+      }
+    }
+
+    return howManyCellsAreFlaged;
+  }
+  useEffect(() => {
+    const howManyRealMinesAreFlaged = countHowManyCellsAreFlaged(gameField);
+    let tempMinesNr = minesInGame;
+    setCellsFlaged(tempMinesNr - howManyRealMinesAreFlaged);
+  });
 
   const textToDisplayAboveField = () => {
     if (isGameOver && havePlayerWon) {
@@ -142,7 +181,7 @@ export default function TabOneScreen() {
   // }
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 40 }}>
+      <View style={{ marginBottom: 20 }}>
         <Text>MINES in Beggining: {minesInGame}</Text>
         <Text
           style={{
@@ -153,6 +192,14 @@ export default function TabOneScreen() {
         >
           {textToDisplayAboveField()}
         </Text>
+        <View style={{ flexDirection: "column" }}>
+          <Pressable onPress={plussOrMinusTheNHandler}>
+            <Text>{isFlagToolActive ? "--" : "++"}</Text>
+          </Pressable>
+          <Text style={{ padding: 10 }}>
+            theN={theN} minesInGame={minesInGame} cellsFlaged={cellsFlaged}
+          </Text>
+        </View>
       </View>
       {/* <View>
         <Button title="TEST" onPress={}></Button>
@@ -177,6 +224,10 @@ export default function TabOneScreen() {
                 justifyContent: "center",
                 backgroundColor: `${oneCellFR.isRevealed ? "#abaaa9" : "gray"}`,
               }}
+              // onPress={() => {
+              //   clickCellHandler(oneCellFR);
+              //   plussOrMinusTheNHandler;
+              // }}
               onPress={() => clickCellHandler(oneCellFR)}
             >
               {/* <Text style={{ fontSize: 16, textAlign: "center" }}>

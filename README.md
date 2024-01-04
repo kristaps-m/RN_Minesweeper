@@ -1,3 +1,7 @@
+### TODO:
+
+- FIX flaged real mines flaged!
+
 ### Default index.tsx file:
 
 ```import { Pressable, StyleSheet } from "react-native";
