@@ -1,3 +1,8 @@
+### TODO:
+
+- FIX flaged real mines flaged! (Or maybe leave it like it is!) ASK somebody about it!
+- ADD comments to all functions so that kid could understand! :) And me in future :)
+
 ### Default index.tsx file:
 
 ```import { Pressable, StyleSheet } from "react-native";

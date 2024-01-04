@@ -4,4 +4,5 @@ export default interface IOneCell {
   isMine: boolean;
   isRevealed: boolean;
   minesCount: number;
+  isFlaged: boolean;
 }

@@ -9,9 +9,15 @@ import addMinesToField from "./functionsForMS/addMinesToField";
 import addMineCountNumbers from "./functionsForMS/addMineCountNumbers";
 import checkIfGameWon from "./functionsForMS/checkIfGameWon";
 import generateNewGameFieldWithOnecellObjects from "./functionsForMS/newGameField";
+import countHowManyCellsAreFlaged from "./functionsForMS/countHowManyCellsAreFlaged";
 
+interface IQueueOneCell {
+  row: number;
+  col: number;
+}
 export default function TabOneScreen() {
-  const [minesInGame, setMinesInGame] = useState(10);
+  const [minesInGame, setMinesInGame] = useState(6);
+  const [cellsFlaged, setCellsFlaged] = useState(minesInGame);
   const [gameField, setGameField] = useState(
     addMineCountNumbers(
       addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(9))
@@ -19,72 +25,92 @@ export default function TabOneScreen() {
   );
   const [isGameOver, setIsGameOver] = useState(false);
   const [havePlayerWon, setHavePlayerWon] = useState(false);
+  const [isFlagToolActive, setFlagTool] = useState(false);
 
-  interface IQueueOneCell {
-    row: number;
-    col: number;
+  function createNewGameHandler() {
+    setGameField(
+      addMineCountNumbers(
+        addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(9))
+      )
+    );
+    setIsGameOver(false);
+    setHavePlayerWon(false);
   }
+
+  function flagToolHandler() {
+    setFlagTool(!isFlagToolActive);
+  }
+
+  const r = (x: boolean) => {
+    return !x;
+  };
   function clickCellHandler(theOneCell: IOneCell) {
-    console.log(isGameOver);
     if (!isGameOver) {
-      if (theOneCell.isMine) {
-        // alert(
-        //   `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
-        //     theOneCell.row
-        //   }][${theOneCell.col}])`
-        // );
-        theOneCell.isRevealed = true;
-        setIsGameOver(true);
-        setHavePlayerWon(false);
-      } else {
+      if (isFlagToolActive) {
         const tempField = [...gameField];
-        const queue: IQueueOneCell[] = [{ ...theOneCell }]; // IOneCell[]
+        tempField[theOneCell.row][theOneCell.col].isFlaged = r(
+          tempField[theOneCell.row][theOneCell.col].isFlaged
+        );
 
-        while (queue.length > 0) {
-          const currentCell = queue.pop();
+        setGameField(tempField);
+      } else {
+        if (theOneCell.isMine) {
+          // alert(
+          //   `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
+          //     theOneCell.row
+          //   }][${theOneCell.col}])`
+          // );
+          theOneCell.isRevealed = true;
+          setIsGameOver(true);
+          setHavePlayerWon(false);
+        } else {
+          const tempField = [...gameField];
+          const queue: IQueueOneCell[] = [{ ...theOneCell }]; // IOneCell[]
 
-          if (currentCell) {
-            const { row, col } = currentCell;
+          while (queue.length > 0) {
+            const currentCell = queue.pop();
 
-            // Check if the cell is already revealed
-            if (!tempField[row][col].isRevealed) {
-              tempField[row][col] = {
-                ...tempField[row][col],
-                isRevealed: true,
-              };
+            if (currentCell) {
+              const { row, col } = currentCell;
 
-              // If the neighboring mines count is 0, add adjacent cells to the queue
-              if (tempField[row][col].minesCount === 0) {
-                // Define adjacent positions
-                const directions = [
-                  { row: -1, col: 0 },
-                  { row: 1, col: 0 },
-                  { row: 0, col: -1 },
-                  { row: 0, col: 1 },
-                ];
+              // Check if the cell is already revealed
+              if (!tempField[row][col].isRevealed) {
+                tempField[row][col] = {
+                  ...tempField[row][col],
+                  isRevealed: true,
+                };
 
-                // Add adjacent cells to the queue
-                for (const direction of directions) {
-                  const newRow = row + direction.row;
-                  const newCol = col + direction.col;
+                // If the neighboring mines count is 0, add adjacent cells to the queue
+                if (tempField[row][col].minesCount === 0) {
+                  // Define adjacent positions
+                  const directions = [
+                    { row: -1, col: 0 },
+                    { row: 1, col: 0 },
+                    { row: 0, col: -1 },
+                    { row: 0, col: 1 },
+                  ];
 
-                  if (
-                    newRow >= 0 &&
-                    newRow < tempField.length &&
-                    newCol >= 0 &&
-                    newCol < tempField[0].length
-                  ) {
-                    queue.push({ row: newRow, col: newCol });
+                  // Add adjacent cells to the queue
+                  for (const direction of directions) {
+                    const newRow = row + direction.row;
+                    const newCol = col + direction.col;
+
+                    if (
+                      newRow >= 0 &&
+                      newRow < tempField.length &&
+                      newCol >= 0 &&
+                      newCol < tempField[0].length
+                    ) {
+                      queue.push({ row: newRow, col: newCol });
+                    }
                   }
                 }
               }
             }
           }
-        }
 
-        setGameField(tempField);
-        console.log("I clicked clickCellHandler", theOneCell);
-        console.log(gameField);
+          setGameField(tempField);
+        }
       }
     }
   }
@@ -96,6 +122,12 @@ export default function TabOneScreen() {
       setHavePlayerWon(true);
       alert("You are MINEsweeper Pro!");
     }
+  });
+
+  useEffect(() => {
+    const howManyRealMinesAreFlaged = countHowManyCellsAreFlaged(gameField);
+    let tempMinesNr = minesInGame;
+    setCellsFlaged(tempMinesNr - howManyRealMinesAreFlaged);
   });
 
   const textToDisplayAboveField = () => {
@@ -110,7 +142,9 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 40 }}>
+      <View style={{ marginBottom: 15 }}>
+        <Button title="NEW GAME?" onPress={createNewGameHandler} />
+        {/* <Text>MINES in Beggining: {minesInGame}</Text> */}
         <Text
           style={{
             fontSize: 25,
@@ -124,6 +158,21 @@ export default function TabOneScreen() {
       {/* <View>
         <Button title="TEST" onPress={}></Button>
       </View> */}
+      <View>
+        <Button title="flagToolHandler" onPress={flagToolHandler} />
+        <View style={{ flexDirection: "row" }}>
+          <Text style={{ fontSize: 20 }}>⚙ </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "800",
+              marginRight: 10,
+              color: `${isFlagToolActive ? "green" : "red"}`,
+            }}
+          >{`${isFlagToolActive ? "Click to 'F'" : "Careful!!"}`}</Text>
+          <Text>{`MINES LEFT? = ${cellsFlaged}`}</Text>
+        </View>
+      </View>
       {gameField.map((oneRow, index) => (
         <View key={index} style={styles.oneRowInGame}>
           {oneRow.map((oneCellFR) => (
@@ -141,9 +190,6 @@ export default function TabOneScreen() {
               }}
               onPress={() => clickCellHandler(oneCellFR)}
             >
-              {/* <Text style={{ fontSize: 16, textAlign: "center" }}>
-                  {oneCellFR.minesCount}
-                </Text> */}
               <TheOneCellComponent
                 oneCellProps={oneCellFR}
                 isGameOver={isGameOver}
@@ -152,6 +198,16 @@ export default function TabOneScreen() {
           ))}
         </View>
       ))}
+      {/* <View style={{ flexDirection: "row" }}>
+        <Text style={{ fontSize: 20 }}>FLAG TOOL = </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "800",
+            color: `${isFlagToolActive ? "green" : "red"}`,
+          }}
+        >{`${isFlagToolActive}`}</Text>
+      </View> */}
     </View>
   );
 }

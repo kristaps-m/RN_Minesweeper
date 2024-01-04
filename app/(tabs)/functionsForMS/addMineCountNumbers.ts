@@ -9,7 +9,7 @@ import countMinesAroundOneCell from "./countMinesAroundOneCell";
    */
 export default function addMineCountNumbers(theGameField: IOneCell[][]) {
   for (let row = 0; row < theGameField.length; row++) {
-    for (let col = 0; col < theGameField.length; col++) {
+    for (let col = 0; col < theGameField[0].length; col++) {
       if (theGameField[row][col].isMine === false) {
         theGameField[row][col].minesCount = countMinesAroundOneCell(
           row,
