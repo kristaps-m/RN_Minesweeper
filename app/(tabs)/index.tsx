@@ -1,4 +1,4 @@
-import { Button, Pressable, StyleSheet } from "react-native";
+import { Button, Pressable, StyleSheet, TextInput } from "react-native";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
@@ -15,26 +15,75 @@ interface IQueueOneCell {
   row: number;
   col: number;
 }
+
+interface IGameSetting {
+  row: number;
+  col: number;
+  mines: number;
+}
+
 export default function TabOneScreen() {
-  const [minesInGame, setMinesInGame] = useState(6);
-  const [cellsFlaged, setCellsFlaged] = useState(minesInGame);
+  // 9 * 9 and 10 mines standart begginer setting
+  const [gameFieldSettings, setFieldSettings] = useState({
+    row: 9,
+    col: 9,
+    mines: 10,
+  });
+  const [textFromTextInput, onChangeText] = useState(
+    `${gameFieldSettings.row} ${gameFieldSettings.col} ${gameFieldSettings.mines}`
+  );
+  const [minesInGame, setMinesInGame] = useState(gameFieldSettings.mines);
+  const [cellsFlaged, setCellsFlaged] = useState(gameFieldSettings.mines);
   const [gameField, setGameField] = useState(
     addMineCountNumbers(
-      addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(9))
+      addMinesToField(
+        gameFieldSettings.mines,
+        generateNewGameFieldWithOnecellObjects(
+          gameFieldSettings.row,
+          gameFieldSettings.col
+        )
+      )
     )
   );
   const [isGameOver, setIsGameOver] = useState(false);
   const [havePlayerWon, setHavePlayerWon] = useState(false);
   const [isFlagToolActive, setFlagTool] = useState(false);
 
+  function makeSureTextInputIsSave(nArray: number[]) {
+    if (nArray.length < 3) {
+      return [10, 10, 5];
+    }
+    return nArray.map((n) => (n < 1 ? 1 : n));
+  }
+
   function createNewGameHandler() {
+    // if user does not enter text in format "n n n" where n is number
+    // function makeSureTextInputIsSave and condtionals in map function below
+    // makes sure that in worst case gameFieldSettings = [10, 10, 5]
+    const mapedNList: number[] = [
+      ...textFromTextInput
+        .split(" ")
+        .map((s) => (Number.isNaN(parseInt(s)) ? 1 : parseInt(s))),
+    ];
+    const listOfN: number[] = makeSureTextInputIsSave(mapedNList);
+    const newGS: IGameSetting = {
+      row: listOfN[0],
+      col: listOfN[1],
+      mines: listOfN[2],
+    };
     setGameField(
       addMineCountNumbers(
-        addMinesToField(minesInGame, generateNewGameFieldWithOnecellObjects(9))
+        addMinesToField(
+          newGS.mines,
+          generateNewGameFieldWithOnecellObjects(newGS.row, newGS.col)
+        )
       )
     );
     setIsGameOver(false);
     setHavePlayerWon(false);
+    setFieldSettings(newGS);
+    setCellsFlaged(newGS.mines);
+    setMinesInGame(newGS.mines);
   }
 
   function flagToolHandler() {
@@ -74,14 +123,21 @@ export default function TabOneScreen() {
               const { row, col } = currentCell;
 
               // Check if the cell is already revealed
-              if (!tempField[row][col].isRevealed) {
+              if (
+                !tempField[row][col].isRevealed &&
+                !tempField[row][col].isFlaged
+              ) {
                 tempField[row][col] = {
                   ...tempField[row][col],
                   isRevealed: true,
+                  // isFlaged: false,
                 };
 
                 // If the neighboring mines count is 0, add adjacent cells to the queue
-                if (tempField[row][col].minesCount === 0) {
+                if (
+                  tempField[row][col].minesCount === 0 &&
+                  !tempField[row][col].isFlaged
+                ) {
                   // Define adjacent positions
                   const directions = [
                     { row: -1, col: 0 },
@@ -120,13 +176,13 @@ export default function TabOneScreen() {
     if (isGameWon) {
       setIsGameOver(true);
       setHavePlayerWon(true);
-      alert("You are MINEsweeper Pro!");
+      // alert("You are MINEsweeper Pro!");
     }
   });
 
   useEffect(() => {
     const howManyRealMinesAreFlaged = countHowManyCellsAreFlaged(gameField);
-    let tempMinesNr = minesInGame;
+    let tempMinesNr = minesInGame; // gameFieldSettings.mines
     setCellsFlaged(tempMinesNr - howManyRealMinesAreFlaged);
   });
 
@@ -143,8 +199,23 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <View style={{ marginBottom: 15 }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.displayRCM}>
+            ROW length: {textFromTextInput.split(" ")[0]}
+          </Text>
+          <Text style={styles.displayRCM}>
+            COL length: {textFromTextInput.split(" ")[1]}
+          </Text>
+          <Text style={styles.displayRCM}>
+            MINES count: {textFromTextInput.split(" ")[2]}
+          </Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeText}
+          value={textFromTextInput}
+        />
         <Button title="NEW GAME?" onPress={createNewGameHandler} />
-        {/* <Text>MINES in Beggining: {minesInGame}</Text> */}
         <Text
           style={{
             fontSize: 25,
@@ -181,12 +252,14 @@ export default function TabOneScreen() {
               style={{
                 borderColor: "black",
                 borderWidth: 1,
-                width: 40,
-                height: 40,
+                width: 27,
+                height: 27,
                 flex: 1,
                 alignContent: "center",
                 justifyContent: "center",
-                backgroundColor: `${oneCellFR.isRevealed ? "#abaaa9" : "gray"}`,
+                backgroundColor: `${
+                  oneCellFR.isRevealed ? "#969696" : "#454545"
+                }`,
               }}
               onPress={() => clickCellHandler(oneCellFR)}
             >
@@ -213,6 +286,9 @@ export default function TabOneScreen() {
 }
 
 const styles = StyleSheet.create({
+  displayRCM: {
+    fontSize: 13,
+  },
   oneRowInGame: {
     flexDirection: "row",
   },
@@ -229,5 +305,11 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: "80%",
+  },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });

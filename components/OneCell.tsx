@@ -71,7 +71,15 @@ export default function TheOneCellComponent(props: oneCellProps) {
     // }
     else if (c.isFlaged) {
       return (
-        <Text style={[styles.oneCellTextDefault, styles.isFlaged]}>F</Text>
+        <Text
+          style={[
+            styles.oneCellTextDefault,
+            styles.isFlaged,
+            { color: c.isRevealed ? "#781785" : "#e56cf5" },
+          ]}
+        >
+          F
+        </Text>
       );
     } else {
       if (c.isRevealed && c.minesCount > 0) {
@@ -86,26 +94,6 @@ export default function TheOneCellComponent(props: oneCellProps) {
           </Text>
         );
       }
-      // else {
-
-      // return (
-      //   <Text
-      //     style={[
-      //       styles.oneCellTextDefault,
-      //       c.isRevealed
-      //         ? styles.oneCellRevealed
-      //         : styles.oneCellClosed,
-      //       // props.isGameOver && styles.isGameOverStyle,
-      //     ]}
-      //   >
-      //     .
-      //     {/* {c.isMine ? "X" : "c"}
-      //     {`${c.isRevealed}`}
-      //     {c.minesCount > 0 &&
-      //       `${c.minesCount}`} */}
-      //   </Text>
-      // );
-      // }
     }
   }
 
@@ -113,12 +101,7 @@ export default function TheOneCellComponent(props: oneCellProps) {
 }
 
 const styles = StyleSheet.create({
-  // cellText: {
-  //   fontSize: 20,
-  // },
   oneCellTextDefault: {
-    // alignContent: "center",
-    // justifyContent: "center",
     textAlign: "center",
     fontSize: 20,
   },
@@ -131,22 +114,22 @@ const styles = StyleSheet.create({
     fontWeight: "normal",
   },
   isGameOverStyle: {
-    fontSize: 28,
+    fontSize: 23,
     fontWeight: "bold",
     color: "blue",
   },
   isGameOverStyleRevealed: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: "bold",
     color: "red",
   },
   isFlaged: {
-    fontSize: 32,
+    fontSize: 27,
     fontWeight: "bold",
-    color: "#cf39e3",
+    // color: `${}`,//"#e56cf5", // #e56cf5 #cf39e3(old)
   },
   isMineAndWasFlaged: {
-    fontSize: 19,
+    fontSize: 15,
     color: "#29f705",
     fontWeight: "bold",
   },
