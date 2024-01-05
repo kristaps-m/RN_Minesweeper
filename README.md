@@ -86,3 +86,39 @@ const styles = StyleSheet.create({
   // const testArray = generateNewGameFieldWithOnecellObjects(3);
 
 ```
+
+### Render ITEM:
+
+```
+<FlatList data={gameField} renderItem={item => {
+        return ();
+      }} horizontal={true}>
+        {gameField.map((oneRow, index) => (
+          <View key={index} style={styles.oneRowInGame}>
+            {oneRow.map((oneCellFR) => (
+              <Pressable
+                key={`${oneCellFR.row}${oneCellFR.col}`}
+                style={{
+                  borderColor: "black",
+                  borderWidth: 1,
+                  width: 27,
+                  height: 27,
+                  flex: 1,
+                  alignContent: "center",
+                  justifyContent: "center",
+                  backgroundColor: `${
+                    oneCellFR.isRevealed ? "#969696" : "#454545"
+                  }`,
+                }}
+                onPress={() => clickCellHandler(oneCellFR)}
+              >
+                <TheOneCellComponent
+                  oneCellProps={oneCellFR}
+                  isGameOver={isGameOver}
+                />
+              </Pressable>
+            ))}
+          </View>
+        ))}
+      </FlatList>
+```

@@ -1,4 +1,4 @@
-import IOneCell from "../../../components/models/IOneCell";
+import IOneCell from "../models/IOneCell";
 
 export default function countHowManyCellsAreFlaged(theGameField: IOneCell[][]) {
   let howManyCellsAreFlaged = 0;

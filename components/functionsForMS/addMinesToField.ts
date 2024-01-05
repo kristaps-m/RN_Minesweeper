@@ -1,4 +1,4 @@
-import IOneCell from "../../../components/models/IOneCell";
+import IOneCell from "../models/IOneCell";
 import countAllMinesInsideGameField from "./countAllMinesInsideGameField";
 import getRandomInt from "./getRandomInt";
 

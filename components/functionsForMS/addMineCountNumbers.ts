@@ -1,4 +1,4 @@
-import IOneCell from "../../../components/models/IOneCell";
+import IOneCell from "../models/IOneCell";
 import countMinesAroundOneCell from "./countMinesAroundOneCell";
 
 // if field is 9 x 9, active cell = 5:5, to check...:

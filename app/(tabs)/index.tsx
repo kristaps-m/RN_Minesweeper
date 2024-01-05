@@ -1,15 +1,21 @@
-import { Button, Pressable, StyleSheet, TextInput } from "react-native";
+import {
+  Button,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 
 import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import { useEffect, useState } from "react";
 import TheOneCellComponent from "../../components/OneCell";
 import IOneCell from "../../components/models/IOneCell";
-import addMinesToField from "./functionsForMS/addMinesToField";
-import addMineCountNumbers from "./functionsForMS/addMineCountNumbers";
-import checkIfGameWon from "./functionsForMS/checkIfGameWon";
-import generateNewGameFieldWithOnecellObjects from "./functionsForMS/newGameField";
-import countHowManyCellsAreFlaged from "./functionsForMS/countHowManyCellsAreFlaged";
+import addMinesToField from "../../components/functionsForMS/addMinesToField";
+import addMineCountNumbers from "../../components/functionsForMS/addMineCountNumbers";
+import checkIfGameWon from "../../components/functionsForMS/checkIfGameWon";
+import generateNewGameFieldWithOnecellObjects from "../../components/functionsForMS/newGameField";
+import countHowManyCellsAreFlaged from "../../components/functionsForMS/countHowManyCellsAreFlaged";
 
 interface IQueueOneCell {
   row: number;
@@ -195,7 +201,7 @@ export default function TabOneScreen() {
       return "Keep Finding Those Mines!";
     }
   };
-
+  console.log(gameField);
   return (
     <View style={styles.container}>
       <View style={{ marginBottom: 15 }}>
@@ -244,33 +250,46 @@ export default function TabOneScreen() {
           <Text>{`MINES LEFT? = ${cellsFlaged}`}</Text>
         </View>
       </View>
-      {gameField.map((oneRow, index) => (
-        <View key={index} style={styles.oneRowInGame}>
-          {oneRow.map((oneCellFR) => (
-            <Pressable
-              key={`${oneCellFR.row}${oneCellFR.col}`}
-              style={{
-                borderColor: "black",
-                borderWidth: 1,
-                width: 27,
-                height: 27,
-                flex: 1,
-                alignContent: "center",
-                justifyContent: "center",
-                backgroundColor: `${
-                  oneCellFR.isRevealed ? "#969696" : "#454545"
-                }`,
-              }}
-              onPress={() => clickCellHandler(oneCellFR)}
-            >
-              <TheOneCellComponent
-                oneCellProps={oneCellFR}
-                isGameOver={isGameOver}
-              />
-            </Pressable>
-          ))}
-        </View>
-      ))}
+      <FlatList
+        style={{ flexDirection: "column" }}
+        data={gameField}
+        renderItem={(itemData) => {
+          return (
+            <View style={styles.oneRowInGame}>
+              {itemData.item.map((oneCellFR) => (
+                <Pressable
+                  key={`${oneCellFR.row}${oneCellFR.col}`}
+                  style={{
+                    borderColor: "black",
+                    borderWidth: 1,
+                    width: 27,
+                    height: 27,
+                    flex: 1,
+                    alignContent: "center",
+                    justifyContent: "center",
+                    backgroundColor: `${
+                      oneCellFR.isRevealed ? "#969696" : "#454545"
+                    }`,
+                  }}
+                  onPress={() => clickCellHandler(oneCellFR)}
+                >
+                  <TheOneCellComponent
+                    oneCellProps={oneCellFR}
+                    isGameOver={isGameOver}
+                  />
+                </Pressable>
+              ))}
+            </View>
+          );
+        }}
+        // horizontal={true}
+        // numColumns={gameField[0].length}
+      />
+      {/* {gameField.map((oneRow, index) => (
+
+        ))}
+      </FlatList> */}
+
       {/* <View style={{ flexDirection: "row" }}>
         <Text style={{ fontSize: 20 }}>FLAG TOOL = </Text>
         <Text
@@ -290,6 +309,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   oneRowInGame: {
+    flex: 1,
     flexDirection: "row",
   },
   container: {

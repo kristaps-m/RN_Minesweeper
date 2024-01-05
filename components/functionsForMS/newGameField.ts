@@ -1,4 +1,4 @@
-import IOneCell from "../../../components/models/IOneCell";
+import IOneCell from "../models/IOneCell";
 
 // one argument then field = square ELSE two arguments
 // GRL:number,GCL: number (Game Row Lenght, Game Column Length)
@@ -17,6 +17,7 @@ export default function generateNewGameFieldWithOnecellObjects(
         isRevealed: false,
         minesCount: 0,
         isFlaged: false,
+        key: `${row}+${col}`,
       };
 
       tempRow.push(theOneCell);
