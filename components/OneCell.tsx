@@ -4,15 +4,8 @@ import IOneCell from "./models/IOneCell";
 type oneCellProps = {
   oneCellProps: IOneCell;
   isGameOver: boolean;
+  isCheatOn: boolean;
 };
-
-// interface oneCell {
-//   row: number;
-//   col: number;
-//   isMine: boolean;
-//   isRevealed: boolean;
-//   minesCount: number;
-// }
 
 export default function TheOneCellComponent(props: oneCellProps) {
   const c = props.oneCellProps;
@@ -55,21 +48,9 @@ export default function TheOneCellComponent(props: oneCellProps) {
           </Text>
         );
       }
-    }
-    // else if (c.isMine) {
-    //   return (
-    //     <>
-    //       <Text>.</Text>
-    //       {/* <Text
-    //         style={[{ fontSize: 20, color: "blue" }, styles.oneCellTextDefault]}
-    //       >
-    //         {c.isMine ? "X-X" : "c"}
-    //       </Text>
-    //       <Text>{`${c.isRevealed}`}</Text> */}
-    //     </>
-    //   );
-    // }
-    else if (c.isFlaged) {
+    } else if (props.isCheatOn && c.isMine) {
+      return <Text style={{ color: "white", textAlign: "center" }}>M</Text>;
+    } else if (c.isFlaged) {
       return (
         <Text
           style={[
@@ -103,33 +84,33 @@ export default function TheOneCellComponent(props: oneCellProps) {
 const styles = StyleSheet.create({
   oneCellTextDefault: {
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 16,
   },
   oneCellRevealed: {
     color: "red",
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   oneCellClosed: {
     color: "green",
     fontWeight: "normal",
   },
   isGameOverStyle: {
-    fontSize: 23,
-    fontWeight: "bold",
-    color: "blue",
+    fontSize: 20,
+    // fontWeight: "bold",
+    color: "#6464fa", // blue
   },
   isGameOverStyleRevealed: {
-    fontSize: 30,
-    fontWeight: "bold",
+    fontSize: 20,
+    // fontWeight: "bold",
     color: "red",
   },
   isFlaged: {
-    fontSize: 27,
+    // fontSize: 27,
     fontWeight: "bold",
     // color: `${}`,//"#e56cf5", // #e56cf5 #cf39e3(old)
   },
   isMineAndWasFlaged: {
-    fontSize: 15,
+    fontSize: 11,
     color: "#29f705",
     fontWeight: "bold",
   },

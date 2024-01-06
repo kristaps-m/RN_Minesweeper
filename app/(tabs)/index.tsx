@@ -7,7 +7,6 @@ import {
   TextInput,
 } from "react-native";
 
-import EditScreenInfo from "../../components/EditScreenInfo";
 import { Text, View } from "../../components/Themed";
 import { useEffect, useState } from "react";
 import TheOneCellComponent from "../../components/OneCell";
@@ -17,17 +16,8 @@ import addMineCountNumbers from "../../components/functionsForMS/addMineCountNum
 import checkIfGameWon from "../../components/functionsForMS/checkIfGameWon";
 import generateNewGameFieldWithOnecellObjects from "../../components/functionsForMS/newGameField";
 import countHowManyCellsAreFlaged from "../../components/functionsForMS/countHowManyCellsAreFlaged";
-
-interface IQueueOneCell {
-  row: number;
-  col: number;
-}
-
-interface IGameSetting {
-  row: number;
-  col: number;
-  mines: number;
-}
+import IGameSetting from "../../components/models/IGameSetting";
+import IQueueOneCell from "../../components/models/IQueueOneCell";
 
 export default function TabOneScreen() {
   // 9 * 9 and 10 mines standart begginer setting
@@ -39,6 +29,7 @@ export default function TabOneScreen() {
   const [textFromTextInput, onChangeText] = useState(
     `${gameFieldSettings.row} ${gameFieldSettings.col} ${gameFieldSettings.mines}`
   );
+  const [isCheatToShowMinesOn, setCheat] = useState(false);
   const [minesInGame, setMinesInGame] = useState(gameFieldSettings.mines);
   const [cellsFlaged, setCellsFlaged] = useState(gameFieldSettings.mines);
   const [gameField, setGameField] = useState(
@@ -58,7 +49,7 @@ export default function TabOneScreen() {
 
   function makeSureTextInputIsSave(nArray: number[]) {
     if (nArray.length < 3) {
-      return [10, 10, 5];
+      return [9, 9, 10];
     }
     return nArray.map((n) => (n < 1 ? 1 : n));
   }
@@ -111,11 +102,11 @@ export default function TabOneScreen() {
         setGameField(tempField);
       } else {
         if (theOneCell.isMine) {
-          // alert(
-          //   `GAME OVER row=${theOneCell.row + 1},col=${theOneCell.col + 1}(cell[${
-          //     theOneCell.row
-          //   }][${theOneCell.col}])`
-          // );
+          alert(
+            `GAME OVER row=${theOneCell.col + 1},col=${
+              theOneCell.row + 1
+            }(cell[${theOneCell.col}][${theOneCell.row}])`
+          );
           theOneCell.isRevealed = true;
           setIsGameOver(true);
           setHavePlayerWon(false);
@@ -151,6 +142,11 @@ export default function TabOneScreen() {
                     { row: 1, col: 0 },
                     { row: 0, col: -1 },
                     { row: 0, col: 1 },
+                    // Define Corner positions
+                    { row: -1, col: -1 },
+                    { row: 1, col: 1 },
+                    { row: -1, col: 1 },
+                    { row: 1, col: -1 },
                   ];
 
                   // Add adjacent cells to the queue
@@ -193,27 +189,33 @@ export default function TabOneScreen() {
     setCellsFlaged(tempMinesNr - howManyRealMinesAreFlaged);
   });
 
+  useEffect(() => {
+    if (textFromTextInput === "I Want Mommy") {
+      setCheat(true);
+    } else {
+      setCheat(false);
+    }
+  });
+
   const textToDisplayAboveField = () => {
     if (isGameOver && havePlayerWon) {
-      return "Amazing You Have Won!";
+      return { text: "Amazing You Have Won!", color: "green" };
     } else if (isGameOver && !havePlayerWon) {
-      return "--- GAME OVER ---\n   --- You Lost! ---";
+      return { text: "- GAME OVER! You Lost! -", color: "red" };
     } else {
-      return "Keep Finding Those Mines!";
+      return { text: "Keep Finding Those Mines!", color: "blue" };
     }
   };
-  console.log(gameField);
+
   return (
     <View style={styles.container}>
       <View style={{ marginBottom: 15 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={styles.displayRCM}>
-            {/* WAS COLS */}
-            ROWS: {textFromTextInput.split(" ")[0]}
+            COLS: {textFromTextInput.split(" ")[0]}
           </Text>
           <Text style={styles.displayRCM}>
-            {/* WAS ROWS */}
-            COLS: {textFromTextInput.split(" ")[1]}
+            ROWS: {textFromTextInput.split(" ")[1]}
           </Text>
           <Text style={styles.displayRCM}>
             MINES: {textFromTextInput.split(" ")[2]}
@@ -224,20 +226,22 @@ export default function TabOneScreen() {
           onChangeText={onChangeText}
           value={textFromTextInput}
         />
-        <Button title="NEW GAME?" onPress={createNewGameHandler} />
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Button title="Begginer!" onPress={() => onChangeText("9 9 10")} />
+          <Button title="Medium!" onPress={() => onChangeText("16 16 40")} />
+          <Button title="Expert!" onPress={() => onChangeText("30 16 99")} />
+          <Button title="START!" onPress={createNewGameHandler} />
+        </View>
         <Text
           style={{
             fontSize: 25,
             fontWeight: "bold",
-            color: "blue",
+            color: `${textToDisplayAboveField().color}`,
           }}
         >
-          {textToDisplayAboveField()}
+          {textToDisplayAboveField().text}
         </Text>
       </View>
-      {/* <View>
-        <Button title="TEST" onPress={}></Button>
-      </View> */}
       <View>
         <Button title="flagToolHandler" onPress={flagToolHandler} />
         <View style={{ flexDirection: "row" }}>
@@ -255,15 +259,10 @@ export default function TabOneScreen() {
       </View>
       <ScrollView style={{ flex: 1 }}>
         <FlatList
-          // style={{ flexDirection: "column" }}
           data={gameField}
           renderItem={(itemData) => {
             return (
-              <View
-                // ---------------------------------------------- styles.oneRowInGame
-                style={{ flexDirection: "column" }}
-                // ----------------------------------------------
-              >
+              <View style={{ flexDirection: "column" }}>
                 {itemData.item.map((oneCellFR) => (
                   <Pressable
                     key={`${oneCellFR.row}${oneCellFR.col}`}
@@ -284,6 +283,7 @@ export default function TabOneScreen() {
                     <TheOneCellComponent
                       oneCellProps={oneCellFR}
                       isGameOver={isGameOver}
+                      isCheatOn={isCheatToShowMinesOn}
                     />
                   </Pressable>
                 ))}
@@ -291,25 +291,8 @@ export default function TabOneScreen() {
             );
           }}
           horizontal={true} // Enable horizontal scrolling
-          // keyExtractor={(item, index) => `${index}`} // Add keyExtracto
         />
       </ScrollView>
-
-      {/* {gameField.map((oneRow, index) => (
-
-        ))}
-      </FlatList> */}
-
-      {/* <View style={{ flexDirection: "row" }}>
-        <Text style={{ fontSize: 20 }}>FLAG TOOL = </Text>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "800",
-            color: `${isFlagToolActive ? "green" : "red"}`,
-          }}
-        >{`${isFlagToolActive}`}</Text>
-      </View> */}
     </View>
   );
 }
@@ -337,9 +320,8 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   input: {
-    height: 40,
-    margin: 12,
+    margin: 6,
     borderWidth: 1,
-    padding: 10,
+    padding: 5,
   },
 });
