@@ -251,11 +251,15 @@ export default function TabOneScreen() {
         </View>
       </View>
       <FlatList
-        style={{ flexDirection: "column" }}
+        // style={{ flexDirection: "column" }}
         data={gameField}
         renderItem={(itemData) => {
           return (
-            <View style={styles.oneRowInGame}>
+            <View
+              // ---------------------------------------------- styles.oneRowInGame
+              style={{ flexDirection: "column" }}
+              // ----------------------------------------------
+            >
               {itemData.item.map((oneCellFR) => (
                 <Pressable
                   key={`${oneCellFR.row}${oneCellFR.col}`}
@@ -264,7 +268,7 @@ export default function TabOneScreen() {
                     borderWidth: 1,
                     width: 27,
                     height: 27,
-                    flex: 1,
+                    // flex: 1,
                     alignContent: "center",
                     justifyContent: "center",
                     backgroundColor: `${
@@ -282,7 +286,7 @@ export default function TabOneScreen() {
             </View>
           );
         }}
-        // horizontal={true}
+        horizontal={true}
         // numColumns={gameField[0].length}
       />
       {/* {gameField.map((oneRow, index) => (
