@@ -2,6 +2,7 @@ import {
   Button,
   FlatList,
   Pressable,
+  ScrollView,
   StyleSheet,
   TextInput,
 } from "react-native";
@@ -207,13 +208,15 @@ export default function TabOneScreen() {
       <View style={{ marginBottom: 15 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={styles.displayRCM}>
-            ROW length: {textFromTextInput.split(" ")[0]}
+            {/* WAS COLS */}
+            ROWS: {textFromTextInput.split(" ")[0]}
           </Text>
           <Text style={styles.displayRCM}>
-            COL length: {textFromTextInput.split(" ")[1]}
+            {/* WAS ROWS */}
+            COLS: {textFromTextInput.split(" ")[1]}
           </Text>
           <Text style={styles.displayRCM}>
-            MINES count: {textFromTextInput.split(" ")[2]}
+            MINES: {textFromTextInput.split(" ")[2]}
           </Text>
         </View>
         <TextInput
@@ -250,45 +253,48 @@ export default function TabOneScreen() {
           <Text>{`MINES LEFT? = ${cellsFlaged}`}</Text>
         </View>
       </View>
-      <FlatList
-        // style={{ flexDirection: "column" }}
-        data={gameField}
-        renderItem={(itemData) => {
-          return (
-            <View
-              // ---------------------------------------------- styles.oneRowInGame
-              style={{ flexDirection: "column" }}
-              // ----------------------------------------------
-            >
-              {itemData.item.map((oneCellFR) => (
-                <Pressable
-                  key={`${oneCellFR.row}${oneCellFR.col}`}
-                  style={{
-                    borderColor: "black",
-                    borderWidth: 1,
-                    width: 27,
-                    height: 27,
-                    // flex: 1,
-                    alignContent: "center",
-                    justifyContent: "center",
-                    backgroundColor: `${
-                      oneCellFR.isRevealed ? "#969696" : "#454545"
-                    }`,
-                  }}
-                  onPress={() => clickCellHandler(oneCellFR)}
-                >
-                  <TheOneCellComponent
-                    oneCellProps={oneCellFR}
-                    isGameOver={isGameOver}
-                  />
-                </Pressable>
-              ))}
-            </View>
-          );
-        }}
-        horizontal={true}
-        // numColumns={gameField[0].length}
-      />
+      <ScrollView style={{ flex: 1 }}>
+        <FlatList
+          // style={{ flexDirection: "column" }}
+          data={gameField}
+          renderItem={(itemData) => {
+            return (
+              <View
+                // ---------------------------------------------- styles.oneRowInGame
+                style={{ flexDirection: "column" }}
+                // ----------------------------------------------
+              >
+                {itemData.item.map((oneCellFR) => (
+                  <Pressable
+                    key={`${oneCellFR.row}${oneCellFR.col}`}
+                    style={{
+                      borderColor: "black",
+                      borderWidth: 1,
+                      width: 27,
+                      height: 27,
+                      // flex: 1,
+                      alignContent: "center",
+                      justifyContent: "center",
+                      backgroundColor: `${
+                        oneCellFR.isRevealed ? "#969696" : "#454545"
+                      }`,
+                    }}
+                    onPress={() => clickCellHandler(oneCellFR)}
+                  >
+                    <TheOneCellComponent
+                      oneCellProps={oneCellFR}
+                      isGameOver={isGameOver}
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            );
+          }}
+          horizontal={true} // Enable horizontal scrolling
+          // keyExtractor={(item, index) => `${index}`} // Add keyExtracto
+        />
+      </ScrollView>
+
       {/* {gameField.map((oneRow, index) => (
 
         ))}
