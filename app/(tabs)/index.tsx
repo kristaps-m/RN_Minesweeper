@@ -47,11 +47,21 @@ export default function TabOneScreen() {
   const [havePlayerWon, setHavePlayerWon] = useState(false);
   const [isFlagToolActive, setFlagTool] = useState(false);
 
+  // Max dimensions for performence ~ [25, 40, 25*40-1]
   function makeSureTextInputIsSave(nArray: number[]) {
     if (nArray.length < 3) {
       return [9, 9, 10];
     }
-    return nArray.map((n) => (n < 1 ? 1 : n));
+    if (nArray[0] > 25) {
+      nArray[0] = 25;
+    }
+    if (nArray[1] > 40) {
+      nArray[1] = 40;
+    }
+    if (nArray[2] > nArray[0] * nArray[1] - 1) {
+      nArray[2] = nArray[0] * nArray[1] - 1;
+    }
+    return nArray.map((n) => (n < 2 ? 2 : n));
   }
 
   function createNewGameHandler() {
@@ -64,6 +74,7 @@ export default function TabOneScreen() {
         .map((s) => (Number.isNaN(parseInt(s)) ? 1 : parseInt(s))),
     ];
     const listOfN: number[] = makeSureTextInputIsSave(mapedNList);
+    onChangeText(listOfN.join(" "));
     const newGS: IGameSetting = {
       row: listOfN[0],
       col: listOfN[1],
@@ -185,7 +196,7 @@ export default function TabOneScreen() {
 
   useEffect(() => {
     const howManyRealMinesAreFlaged = countHowManyCellsAreFlaged(gameField);
-    let tempMinesNr = minesInGame; // gameFieldSettings.mines
+    let tempMinesNr = minesInGame;
     setCellsFlaged(tempMinesNr - howManyRealMinesAreFlaged);
   });
 
@@ -271,7 +282,6 @@ export default function TabOneScreen() {
                       borderWidth: 1,
                       width: 27,
                       height: 27,
-                      // flex: 1,
                       alignContent: "center",
                       justifyContent: "center",
                       backgroundColor: `${

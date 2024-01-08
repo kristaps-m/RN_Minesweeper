@@ -10,9 +10,6 @@ type oneCellProps = {
 export default function TheOneCellComponent(props: oneCellProps) {
   const c = props.oneCellProps;
   function textReturnFunction() {
-    // if (c.isRevealed && c.isMine) {
-    //   return <Text>☠︎︎</Text>;
-    // } else
     if (props.isGameOver && c.isMine) {
       if (c.isRevealed) {
         return (
@@ -114,11 +111,4 @@ const styles = StyleSheet.create({
     color: "#29f705",
     fontWeight: "bold",
   },
-  //   oneCellText: {
-  //   alignContent: "center",
-  //   justifyContent: "center",
-  //   fontSize: 10,
-  //   color: "red" : "green"},
-  //   fontWeight: `${oneCellFR.isMine ? "bold" : "normal"}`,
-  // },
 });
