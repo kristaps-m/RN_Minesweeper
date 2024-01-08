@@ -4,22 +4,12 @@ import IOneCell from "./models/IOneCell";
 type oneCellProps = {
   oneCellProps: IOneCell;
   isGameOver: boolean;
+  isCheatOn: boolean;
 };
-
-// interface oneCell {
-//   row: number;
-//   col: number;
-//   isMine: boolean;
-//   isRevealed: boolean;
-//   minesCount: number;
-// }
 
 export default function TheOneCellComponent(props: oneCellProps) {
   const c = props.oneCellProps;
   function textReturnFunction() {
-    // if (c.isRevealed && c.isMine) {
-    //   return <Text>☠︎︎</Text>;
-    // } else
     if (props.isGameOver && c.isMine) {
       if (c.isRevealed) {
         return (
@@ -55,23 +45,19 @@ export default function TheOneCellComponent(props: oneCellProps) {
           </Text>
         );
       }
-    }
-    // else if (c.isMine) {
-    //   return (
-    //     <>
-    //       <Text>.</Text>
-    //       {/* <Text
-    //         style={[{ fontSize: 20, color: "blue" }, styles.oneCellTextDefault]}
-    //       >
-    //         {c.isMine ? "X-X" : "c"}
-    //       </Text>
-    //       <Text>{`${c.isRevealed}`}</Text> */}
-    //     </>
-    //   );
-    // }
-    else if (c.isFlaged) {
+    } else if (props.isCheatOn && c.isMine) {
+      return <Text style={{ color: "white", textAlign: "center" }}>M</Text>;
+    } else if (c.isFlaged) {
       return (
-        <Text style={[styles.oneCellTextDefault, styles.isFlaged]}>F</Text>
+        <Text
+          style={[
+            styles.oneCellTextDefault,
+            styles.isFlaged,
+            { color: c.isRevealed ? "#781785" : "#e56cf5" },
+          ]}
+        >
+          F
+        </Text>
       );
     } else {
       if (c.isRevealed && c.minesCount > 0) {
@@ -86,26 +72,6 @@ export default function TheOneCellComponent(props: oneCellProps) {
           </Text>
         );
       }
-      // else {
-
-      // return (
-      //   <Text
-      //     style={[
-      //       styles.oneCellTextDefault,
-      //       c.isRevealed
-      //         ? styles.oneCellRevealed
-      //         : styles.oneCellClosed,
-      //       // props.isGameOver && styles.isGameOverStyle,
-      //     ]}
-      //   >
-      //     .
-      //     {/* {c.isMine ? "X" : "c"}
-      //     {`${c.isRevealed}`}
-      //     {c.minesCount > 0 &&
-      //       `${c.minesCount}`} */}
-      //   </Text>
-      // );
-      // }
     }
   }
 
@@ -113,48 +79,36 @@ export default function TheOneCellComponent(props: oneCellProps) {
 }
 
 const styles = StyleSheet.create({
-  // cellText: {
-  //   fontSize: 20,
-  // },
   oneCellTextDefault: {
-    // alignContent: "center",
-    // justifyContent: "center",
     textAlign: "center",
-    fontSize: 20,
+    fontSize: 16,
   },
   oneCellRevealed: {
     color: "red",
-    fontWeight: "bold",
+    // fontWeight: "bold",
   },
   oneCellClosed: {
     color: "green",
     fontWeight: "normal",
   },
   isGameOverStyle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "blue",
+    fontSize: 20,
+    // fontWeight: "bold",
+    color: "#6464fa", // blue
   },
   isGameOverStyleRevealed: {
-    fontSize: 35,
-    fontWeight: "bold",
+    fontSize: 20,
+    // fontWeight: "bold",
     color: "red",
   },
   isFlaged: {
-    fontSize: 32,
+    // fontSize: 27,
     fontWeight: "bold",
-    color: "#cf39e3",
+    // color: `${}`,//"#e56cf5", // #e56cf5 #cf39e3(old)
   },
   isMineAndWasFlaged: {
-    fontSize: 19,
+    fontSize: 11,
     color: "#29f705",
     fontWeight: "bold",
   },
-  //   oneCellText: {
-  //   alignContent: "center",
-  //   justifyContent: "center",
-  //   fontSize: 10,
-  //   color: "red" : "green"},
-  //   fontWeight: `${oneCellFR.isMine ? "bold" : "normal"}`,
-  // },
 });

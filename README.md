@@ -2,6 +2,8 @@
 
 - FIX flaged real mines flaged! (Or maybe leave it like it is!) ASK somebody about it!
 - ADD comments to all functions so that kid could understand! :) And me in future :)
+- Upgreade performace?
+- Create Snake Game using React Native!
 
 ### Default index.tsx file:
 
@@ -85,4 +87,40 @@ const styles = StyleSheet.create({
   ] */
   // const testArray = generateNewGameFieldWithOnecellObjects(3);
 
+```
+
+### Render ITEM:
+
+```
+<FlatList data={gameField} renderItem={item => {
+        return ();
+      }} horizontal={true}>
+        {gameField.map((oneRow, index) => (
+          <View key={index} style={styles.oneRowInGame}>
+            {oneRow.map((oneCellFR) => (
+              <Pressable
+                key={`${oneCellFR.row}${oneCellFR.col}`}
+                style={{
+                  borderColor: "black",
+                  borderWidth: 1,
+                  width: 27,
+                  height: 27,
+                  flex: 1,
+                  alignContent: "center",
+                  justifyContent: "center",
+                  backgroundColor: `${
+                    oneCellFR.isRevealed ? "#969696" : "#454545"
+                  }`,
+                }}
+                onPress={() => clickCellHandler(oneCellFR)}
+              >
+                <TheOneCellComponent
+                  oneCellProps={oneCellFR}
+                  isGameOver={isGameOver}
+                />
+              </Pressable>
+            ))}
+          </View>
+        ))}
+      </FlatList>
 ```

@@ -1,11 +1,10 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React from "react";
+import { StyleSheet } from "react-native";
 
-import Colors from '../constants/Colors';
-import { ExternalLink } from './ExternalLink';
-import { MonoText } from './StyledText';
-import { Text, View } from './Themed';
-
+// import Colors from "../constants/Colors";
+// import { ExternalLink } from "./ExternalLink";
+// import { MonoText } from "./StyledText";
+import { Text, View } from "./Themed";
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
@@ -14,33 +13,63 @@ export default function EditScreenInfo({ path }: { path: string }) {
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          Open up the code for this screen:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.homeScreenFilename]}
-          darkColor="rgba(255,255,255,0.05)"
-          lightColor="rgba(0,0,0,0.05)">
-          <MonoText>{path}</MonoText>
-        </View>
-
-        <Text
-          style={styles.getStartedText}
-          lightColor="rgba(0,0,0,0.8)"
-          darkColor="rgba(255,255,255,0.8)">
-          Change any of the text, save the file, and your app will automatically update.
+          darkColor="rgba(255,255,255,0.8)"
+        >
+          I suggest to stick with default sizes, but if you want to know then:
+          maximum column length = 25, Max row length = 40, maximum mines =
+          colums * row -1.{"\n"}Minumum dimensions is 2 x 2. Minimum mines count
+          is 2.
         </Text>
       </View>
-
-      <View style={styles.helpContainer}>
-        <ExternalLink
-          style={styles.helpLink}
-          href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet">
-          <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
-            Tap here if your app doesn't automatically update after making changes
+      <View>
+        <Text>INFO:</Text>
+        <View style={{ flexDirection: "row" }}>
+          <Text>'Game over' and 'Mine clicked': </Text>
+          <Text
+            style={[styles.oneCellTextDefault, styles.isGameOverStyleRevealed]}
+          >
+            ☠︎︎
           </Text>
-        </ExternalLink>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <Text>'Game over' and 'Mine was flaged': </Text>
+          <Text style={[styles.oneCellTextDefault, styles.isMineAndWasFlaged]}>
+            ☠︎︎,F
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <Text>'Game over' all mines are revealed: </Text>
+          <Text style={[styles.oneCellTextDefault, styles.isGameOverStyle]}>
+            ☠︎︎
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <Text>Flaged cell on revealed and not revealed cell: </Text>
+          <Text
+            style={[
+              styles.oneCellTextDefault,
+              styles.isFlaged,
+              { color: "#781785" },
+            ]}
+          >
+            F
+          </Text>
+          <Text
+            style={[
+              styles.oneCellTextDefault,
+              styles.isFlaged,
+              { color: "#e56cf5" },
+            ]}
+          >
+            F
+          </Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <Text>Number of mines around corrent cell: </Text>
+          <Text style={[styles.oneCellTextDefault, styles.oneCellRevealed]}>
+            1..9
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -48,7 +77,7 @@ export default function EditScreenInfo({ path }: { path: string }) {
 
 const styles = StyleSheet.create({
   getStartedContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 50,
   },
   homeScreenFilename: {
@@ -61,17 +90,44 @@ const styles = StyleSheet.create({
   getStartedText: {
     fontSize: 17,
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
   helpContainer: {
     marginTop: 15,
     marginHorizontal: 20,
-    alignItems: 'center',
+    alignItems: "center",
   },
   helpLink: {
     paddingVertical: 15,
   },
   helpLinkText: {
-    textAlign: 'center',
+    textAlign: "center",
+  },
+  oneCellTextDefault: {
+    textAlign: "center",
+    fontSize: 16,
+  },
+  oneCellRevealed: {
+    color: "red",
+  },
+  oneCellClosed: {
+    color: "green",
+    fontWeight: "normal",
+  },
+  isGameOverStyle: {
+    fontSize: 20,
+    color: "#6464fa", // blue
+  },
+  isGameOverStyleRevealed: {
+    fontSize: 20,
+    color: "red",
+  },
+  isFlaged: {
+    fontWeight: "bold",
+  },
+  isMineAndWasFlaged: {
+    fontSize: 11,
+    color: "#29f705",
+    fontWeight: "bold",
   },
 });
