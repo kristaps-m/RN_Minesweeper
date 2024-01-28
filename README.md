@@ -1,3 +1,9 @@
+### HOW TO RUN?
+
+- https://docs.expo.dev/tutorial/create-your-first-app/
+- npm run web (this is what I use)
+- npx expo start
+
 ### TODO:
 
 - FIX flaged real mines flaged! (Or maybe leave it like it is!) ASK somebody about it!
