@@ -4,6 +4,10 @@
 - npm run web (this is what I use)
 - npx expo start
 
+# ------------------------------------------------------------------------------
+
+# MineSweeper!
+
 ### TODO:
 
 - FIX flaged real mines flaged! (Or maybe leave it like it is!) ASK somebody about it!
@@ -130,3 +134,11 @@ const styles = StyleSheet.create({
         ))}
       </FlatList>
 ```
+
+# ------------------------------------------------------------------------------
+
+# SnakeGame!
+
+### My google searches
+
+- does react native has canvas?
