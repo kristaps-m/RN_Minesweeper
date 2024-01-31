@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 export default function TabTwoScreen() {
   const listOfTestCh = ["#", "@", "%", "+", "_", "X"];
   const [snakeHead, setSnakeHead] = useState({ x: 0, y: 0 });
+  const [gameRunning, setGameRunning] = useState(true);
   const [xDir, setXDir] = useState(0);
   const [xVelocity, setXVelocity] = useState(0);
   const [yDir, setYDir] = useState(0);
@@ -21,6 +22,8 @@ export default function TabTwoScreen() {
     [".", ".", ".", ".", ".", ".", ".", "."],
   ]);
 
+  let c = 0;
+
   // function setDirRightHandler() {
   //   setXDir(1);
   // }
@@ -28,30 +31,80 @@ export default function TabTwoScreen() {
   // function setDirLeftHandler() {
   //   setXDir(-1);
   // }
+  let gameTimerId: any;
+  let gameTimerId2: any;
 
-  function startGameHandler() {
-    setInterval(() => {
-      if (xDir !== 0) {
-        let tempSnakeField = [...snakeField];
-        tempSnakeField[snakeHead.y][snakeHead.x] = ".";
-        /// SET ALL
-        let tempSnakeH = snakeHead;
-        tempSnakeH.x += xDir;
-        // let x = xDir;
-        // let y = 0;
-        setSnakeHead(tempSnakeH);
-        tempSnakeField[snakeHead.y][snakeHead.x] = "#";
+  useEffect(() => {
+    // if (gameRunning) {
 
-        setSnakeField(tempSnakeField);
-        console.log(snakeHead);
-        console.log(snakeField);
-        console.log(xDir);
-      }
-      // else if(){
+    gameTimerId = setInterval(() => {
+      // if (xDir !== 0) {
+      console.log(`Before ${c}`);
+      console.log(snakeHead);
+      let tempSnakeField = [...snakeField];
+      tempSnakeField[snakeHead.x][snakeHead.y] = ".";
+      setSnakeField(tempSnakeField);
+      /// SET ALL
+      // let tempSnakeH = snakeHead;
+      // tempSnakeH.x += xDir;
 
+      // console.log(snakeField);
+      // console.log(xDir);
       // }
-    }, 7000);
-  }
+    }, 1500);
+    // c++;
+    // console.log("TEST");
+
+    gameTimerId2 = setInterval(() => {
+      // if (xDir !== 0) {
+
+      /// SET ALL
+      // let tempSnakeH = snakeHead;
+      // tempSnakeH.x += xDir;
+      setSnakeHead({ x: snakeHead.x + xDir, y: snakeHead.y + yDir });
+      let tempSnakeField2 = [...snakeField];
+      tempSnakeField2[snakeHead.x][snakeHead.y] = "#";
+
+      setSnakeField(tempSnakeField2);
+      console.log(`After ${c}`);
+      console.log(snakeHead);
+      // console.log(snakeField);
+      // console.log(xDir);
+      // }
+    }, 1500);
+    // c++;
+    // console.log("TEST");
+
+    return () => {
+      clearInterval(gameTimerId);
+      clearInterval(gameTimerId2);
+    };
+    // }
+  }, [snakeHead, snakeField, c]);
+  // console.log(snakeHead);
+  // function startGameHandler() {
+  //   setInterval(() => {
+  //     if (xDir !== 0) {
+  //       let tempSnakeField = [...snakeField];
+  //       tempSnakeField[snakeHead.y][snakeHead.x] = ".";
+  //       /// SET ALL
+  //       let tempSnakeH = snakeHead;
+  //       tempSnakeH.x += xDir;
+  //       // let x = xDir;
+  //       // let y = 0;
+  //       setSnakeHead(tempSnakeH);
+  //       tempSnakeField[snakeHead.y][snakeHead.x] = "#";
+
+  //       setSnakeField(tempSnakeField);
+  //       console.log(snakeHead);
+  //       console.log(snakeField);
+  //       console.log(xDir);
+  //     }
+  //     // else if(){
+
+  //     // }
+  //   }, 7000);
+  // }
 
   // snakeField[0][0] = "X";
 
@@ -118,13 +171,17 @@ export default function TabTwoScreen() {
         <Pressable style={styles.directionButtons} onPress={() => setXDir(-1)}>
           <Text>LEFT</Text>
         </Pressable>
+        <Pressable style={styles.directionButtons} onPress={() => setXDir(0)}>
+          <Text>-0-</Text>
+        </Pressable>
         <Pressable style={styles.directionButtons} onPress={() => setXDir(1)}>
           <Text>RIGHT</Text>
         </Pressable>
       </View>
       <Pressable
         style={{ marginBottom: 20 }}
-        onPress={() => startGameHandler()}
+        // onPress={() => startGameHandler()}
+        onPress={() => setGameRunning(false)}
       >
         <Text>Start Game?</Text>
       </Pressable>
