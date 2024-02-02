@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+import { StyleSheet } from "react-native";
+import { GameEngine } from "react-native-game-engine";
+import EditScreenInfo2 from "../../components/EditScreenInfo2";
+import { Text, View } from "../../components/Themed";
+// import entities from "./entities";
+=======
 import { Pressable, StyleSheet } from "react-native";
 
 import EditScreenInfo2 from "../../components/EditScreenInfo2";
@@ -8,6 +15,7 @@ interface SnakeCell {
   x: number;
   y: number;
 }
+>>>>>>> snake_as_view_grid
 
 export default function TabTwoScreen() {
   const listOfTestCh = ["#", "@", "%", "+", "_", "X"];
@@ -127,6 +135,12 @@ export default function TabTwoScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
+<<<<<<< HEAD
+      <GameEngine
+        // entities={entities()}
+        style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+      ></GameEngine>
+=======
       <Pressable
         style={styles.directionButtons}
         onPress={() => {
@@ -193,6 +207,7 @@ export default function TabTwoScreen() {
           );
         })}
       </View>
+>>>>>>> snake_as_view_grid
       {/* <EditScreenInfo2 path="app/(tabs)/two.tsx" /> */}
     </View>
   );

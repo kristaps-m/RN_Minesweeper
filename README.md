@@ -142,3 +142,11 @@ const styles = StyleSheet.create({
 ### My google searches
 
 - does react native has canvas?
+- react native settimeout useeffect
+
+#### From How to Make FLAPPY BIRD with React Native
+
+- React Native Game Engine
+  - This has game loop?
+- matter.js = physics engine (not nessesary for snake?)
+- StatusBar = Hide status bar!
