@@ -3,6 +3,8 @@ import { Pressable, StyleSheet } from "react-native";
 import EditScreenInfo2 from "../../components/EditScreenInfo2";
 import { Text, View } from "../../components/Themed";
 import { useEffect, useState } from "react";
+import generateFood from "../../components/functionsForSnake/generateFood";
+import generateFoodCordinates from "../../components/functionsForSnake/generateFoodCordinates";
 
 interface SnakeCell {
   x: number;
@@ -12,12 +14,13 @@ interface SnakeCell {
 export default function TabTwoScreen() {
   const listOfTestCh = ["#", "@", "%", "+", "_", "X"];
   // const [snakeHead, setSnakeHead] = useState({ x: 0, y: 0 });
-  const [snakeHead, setSnakeHead] = useState<SnakeCell[]>([
+  const [snakeTailBody, setSnakeHead] = useState<SnakeCell[]>([
     { x: 0, y: 0 },
     { x: 1, y: 0 },
     { x: 2, y: 0 },
   ]);
   const [gameRunning, setGameRunning] = useState(true);
+  const [foodIsPlaced, setFoodIsPlaced] = useState(false);
   const [xDir, setXDir] = useState(0);
   const [xVelocity, setXVelocity] = useState(0);
   const [yDir, setYDir] = useState(0);
@@ -36,8 +39,11 @@ export default function TabTwoScreen() {
     [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
   ]);
 
+  const [foodCords, setFoodCords] = useState<SnakeCell>(
+    generateFoodCordinates(snakeField)
+  );
   let c = 0;
-
+  // let placeFood = generateFood(snakeField);
   // function setDirRightHandler() {
   //   setXDir(1);
   // }
@@ -49,25 +55,34 @@ export default function TabTwoScreen() {
   // let gameTimerId2: any;
   function drawField() {
     let tempSnakeField = [...snakeField];
-    const snakeLenght = snakeHead.length;
+    const snakeLenght = snakeTailBody.length;
     // let tempSnakeHead: SnakeCell[] = snakeHead;
-    let tempSnakeHead = [...snakeHead][snakeLenght - 1];
+    let tempSnakeHead = [...snakeTailBody][snakeLenght - 1];
     let newSnakeHead = {
       x: (tempSnakeHead.x += xDir),
       y: (tempSnakeHead.y += yDir),
     };
-    snakeHead.push(newSnakeHead);
+    snakeTailBody.push(newSnakeHead);
     // tempSnakeField[snakeHead[0].x][snakeHead[0].y] = ".";
     // setSnakeField(tempSnakeField);
     for (
       let index = 0;
-      index < snakeHead.slice(0, snakeHead.length).length;
+      index < snakeTailBody.slice(0, snakeTailBody.length).length;
       index++
     ) {
-      tempSnakeField[snakeHead[index].x][snakeHead[index].y] = "#";
+      tempSnakeField[snakeTailBody[index].x][snakeTailBody[index].y] = "#";
+    }
+    // if (!foodIsPlaced) {
+    //   tempSnakeField = generateFood(tempSnakeField);
+    //   setFoodIsPlaced(true);
+    // }
+    tempSnakeField[foodCords.x][foodCords.y] = "O";
+    if (newSnakeHead.x === foodCords.x && newSnakeHead.y === foodCords.y) {
+      snakeTailBody.push(newSnakeHead);
+      setFoodCords(generateFoodCordinates(snakeField));
     }
     setSnakeField(tempSnakeField);
-    snakeHead.shift();
+    snakeTailBody.shift();
   }
 
   function resetFieldLook() {
@@ -95,9 +110,14 @@ export default function TabTwoScreen() {
       // setSnakeField(tempSnakeField);
       resetFieldLook();
       drawField();
+      // if (!foodIsPlaced) {
+      //   setSnakeField(generateFood(snakeField));
+      //   setFoodIsPlaced(true);
+      // }
+      // setSnakeField(generateFood(snakeField));
 
       // snakeHead.shift();
-      console.log(snakeHead);
+      console.log(snakeTailBody);
       /// SET ALL
       // let tempSnakeH = snakeHead;
       // tempSnakeH.x += xDir;
@@ -113,14 +133,14 @@ export default function TabTwoScreen() {
       clearInterval(gameTimerId);
     };
     // }
-  }, [snakeField, xDir, yDir]);
+  }, [snakeField, xDir, yDir, foodIsPlaced]);
   // console.log(snakeHead);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab Two</Text>
       <Text>
-        {xDir}, sh.x={snakeHead[0].x}, sh.y{snakeHead[0].y}
+        {xDir}, sh.x={snakeTailBody[0].x}, sh.y{snakeTailBody[0].y}
       </Text>
       <View
         style={styles.separator}
