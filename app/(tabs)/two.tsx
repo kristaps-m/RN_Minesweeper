@@ -5,10 +5,8 @@ import { Text, View } from "../../components/Themed";
 import { useEffect, useState } from "react";
 import generateFood from "../../components/functionsForSnake/generateFood";
 import generateFoodCordinates from "../../components/functionsForSnake/generateFoodCordinates";
-import ISnakeCell from "../../components/models/ISnakeCell";
 import didSnakeRunInTail from "../../components/functionsForSnake/colisionDetection";
 import ISnakeCell from "../../components/models/ISnakeCell";
-import didSnakeRunInTail from "../../components/functionsForSnake/colisionDetection";
 
 export default function TabTwoScreen() {
   const listOfTestCh = ["#", "@", "%", "+", "_", "X"];
@@ -42,7 +40,7 @@ export default function TabTwoScreen() {
     [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
   ]);
 
-  const [foodCords, setFoodCords] = useState<ISnakeCell>(
+  // const [foodCords, setFoodCords] = useState<ISnakeCell>(
   const [foodCords, setFoodCords] = useState<ISnakeCell>(
     generateFoodCordinates(snakeField)
   );
@@ -77,7 +75,7 @@ export default function TabTwoScreen() {
     const snakeLenght = snakeTailBody.length;
     // let tempSnakeHead: SnakeCell[] = snakeHead;
     // let tempSnakeHead = [...snakeTailBody][snakeLenght - 1];
-    let tempSnakeHead = snakeTailBody[snakeLenght - 1];
+    // let tempSnakeHead = snakeTailBody[snakeLenght - 1];
     // let tempSnakeHead = [...snakeTailBody][snakeLenght - 1];
     let tempSnakeHead = snakeTailBody[snakeLenght - 1];
     let newSnakeHead = {
@@ -111,8 +109,8 @@ export default function TabTwoScreen() {
     if (newSnakeHead.x === foodCords.x && newSnakeHead.y === foodCords.y) {
       snakeTailBody.push(tempSnakeHead);
       setFoodCords(generateFoodCordinates(snakeField));
-      let tempGamePoints = gamePoints;
-      setGamePoints((tempGamePoints += 1));
+      // let tempGamePoints = gamePoints;
+      // setGamePoints((tempGamePoints += 1));
       let tempGamePoints = gamePoints;
       setGamePoints((tempGamePoints += 1));
     }
@@ -181,11 +179,7 @@ export default function TabTwoScreen() {
       <Text style={styles.title}>Very Basic Snake Game</Text>
       <Text style={styles.title}>Points {gamePoints}</Text>
       {/* <Text>
-      <Text style={styles.title}>Very Basic Snake Game</Text>
-      <Text style={styles.title}>Points {gamePoints}</Text>
-      {/* <Text>
         {xDir}, sh.x={snakeTailBody[0].x}, sh.y{snakeTailBody[0].y}
-      </Text> */}
       </Text> */}
       <View
         style={styles.separator}
@@ -193,7 +187,6 @@ export default function TabTwoScreen() {
         darkColor="rgba(255,255,255,0.1)"
       />
       <Pressable
-        style={{ paddingBottom: 10 }}
         style={{ paddingBottom: 10 }}
         onPress={() => {
           setXDir(0), setYDir(-1);
@@ -242,7 +235,6 @@ export default function TabTwoScreen() {
         onPress={() => setGameRunning(false)}
       >
         <Text>Start Game?</Text>
-      </Pressable> */}
       </Pressable> */}
       {/* <Text>HELL OTHIS IS TAB TWO BUT WHERE IS MODAL?</Text> */}
       <View style={{ flexDirection: "row" }}>
@@ -297,7 +289,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   separator: {
-    marginVertical: 5,
     marginVertical: 5,
     height: 1,
     width: "80%",
