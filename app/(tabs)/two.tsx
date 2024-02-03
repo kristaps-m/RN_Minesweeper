@@ -83,10 +83,13 @@ export default function TabTwoScreen() {
       y: (tempSnakeHead.y += yDir),
     };
     // if (
-    //   didSnakeRunInTail(snakeTailBody.slice(0, snakeLenght), tempSnakeHead) &&
-    //   snakeTailBody.length > 3
+    //   didSnakeRunInTail(
+    //     snakeTailBody.slice(0, snakeLenght - 2),
+    //     tempSnakeHead
+    //   ) &&
+    //   snakeTailBody.length > 5
     // ) {
-    //   console.log(snakeTailBody, tempSnakeHead);
+    //   console.log(snakeTailBody.slice(0, snakeLenght - 2), tempSnakeHead);
     //   console.log("GAME OVER AUCH!");
     //   setGameIsRunning(false);
     // }
@@ -95,19 +98,22 @@ export default function TabTwoScreen() {
     // setSnakeField(tempSnakeField);
     for (
       let index = 0;
-      index < snakeTailBody.slice(0, snakeTailBody.length).length;
+      index < snakeTailBody.slice(0, snakeLenght).length;
       index++
     ) {
+      // if(index < snake){
+
+      // }
       tempSnakeField[snakeTailBody[index].x][snakeTailBody[index].y] = "#";
     }
-    tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "#";
+    tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
     if (!foodIsPlaced) {
       tempSnakeField = generateFood(tempSnakeField);
       setFoodIsPlaced(true);
     }
     tempSnakeField[foodCords.x][foodCords.y] = "O";
     if (newSnakeHead.x === foodCords.x && newSnakeHead.y === foodCords.y) {
-      snakeTailBody.push(tempSnakeHead);
+      snakeTailBody.unshift(tempSnakeHead);
       setFoodCords(generateFoodCordinates(snakeField));
       // let tempGamePoints = gamePoints;
       // setGamePoints((tempGamePoints += 1));
@@ -145,6 +151,19 @@ export default function TabTwoScreen() {
       if (gameIsRunning) {
         resetFieldLook();
         drawField();
+        const snakeLenght = snakeTailBody.length;
+        let tempSnakeHead = snakeTailBody[snakeLenght - 1];
+        if (
+          didSnakeRunInTail(
+            snakeTailBody.slice(0, snakeLenght - 2),
+            tempSnakeHead
+          ) &&
+          snakeTailBody.length > 5
+        ) {
+          console.log(snakeTailBody.slice(0, snakeLenght - 2), tempSnakeHead);
+          console.log("GAME OVER AUCH!");
+          setGameIsRunning(false);
+        }
         // drawHead();
       }
       // if (!foodIsPlaced) {
@@ -163,7 +182,7 @@ export default function TabTwoScreen() {
       // console.log(snakeField);
       // console.log(xDir);
       // }
-    }, 1000);
+    }, 444);
     // c++;
     // console.log("TEST");
 
@@ -171,8 +190,12 @@ export default function TabTwoScreen() {
       clearInterval(gameTimerId);
     };
     // }
-  }, [snakeField, xDir, yDir, foodIsPlaced]);
+  }, [snakeField, xDir, yDir, foodIsPlaced, gameIsRunning, snakeTailBody]);
   // console.log(snakeHead);
+
+  function toggleGamePause() {
+    return !gameIsRunning;
+  }
 
   return (
     <View style={styles.container}>
@@ -206,7 +229,8 @@ export default function TabTwoScreen() {
         <Pressable
           style={styles.directionButtons}
           onPress={() => {
-            setXDir(0), setYDir(0);
+            // setXDir(0), setYDir(0);
+            setGameIsRunning(toggleGamePause());
           }}
         >
           <Text>-0-</Text>

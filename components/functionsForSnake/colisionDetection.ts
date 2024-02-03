@@ -6,10 +6,7 @@ export default function didSnakeRunInTail(
 ) {
   for (let i = 0; i < snakeBody.length; i++) {
     let snakeBodyCell = snakeBody[i];
-    if (
-      snakeBodyCell.x === snakeHead.x &&
-      snakeBodyCell.y === snakeBodyCell.y
-    ) {
+    if (snakeBodyCell.x === snakeHead.x && snakeBodyCell.y === snakeHead.y) {
       return true;
     }
   }
