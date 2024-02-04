@@ -14,10 +14,13 @@ export default function TabTwoScreen() {
   const [gameIsRunning, setGameIsRunning] = useState(true);
   // const [snakeHead, setSnakeHead] = useState<ISnakeCell>({ x: 3, y: 0 });
   const [snakeTailBody, setTailBody] = useState<ISnakeCell[]>([
-    { x: 0, y: 0 },
-    { x: 1, y: 0 },
-    { x: 2, y: 0 },
-    { x: 3, y: 0 },
+    // { x: 0, y: 0 },
+    // { x: 1, y: 0 },
+    // { x: 2, y: 0 },
+    // { x: 3, y: 0 },
+    { x: 1, y: 1 },
+    { x: 1, y: 2 },
+    // { x: 1, y: 3 },
   ]);
   // const [gameRunning, setGameRunning] = useState(true);
   // const [gameRunning, setGameRunning] = useState(true);
@@ -26,23 +29,29 @@ export default function TabTwoScreen() {
   const [xVelocity, setXVelocity] = useState(0);
   const [yDir, setYDir] = useState(0);
   const [snakeField, setSnakeField] = useState([
-    [" ", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [" ", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+
+    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
   ]);
 
   // const [foodCords, setFoodCords] = useState<ISnakeCell>(
   const [foodCords, setFoodCords] = useState<ISnakeCell>(
-    generateFoodCordinates(snakeField)
+    generateFoodCordinates(snakeField, snakeTailBody)
   );
   let c = 0;
   // let placeFood = generateFood(snakeField);
@@ -71,6 +80,10 @@ export default function TabTwoScreen() {
   //   snakeHead.shift();
   // }
   function drawField() {
+    console.log(snakeField);
+    console.log(snakeTailBody);
+    let snakeFieldWidth = snakeField[0].length;
+    let snakeFieldHeight = snakeField.length;
     let tempSnakeField = [...snakeField];
     const snakeLenght = snakeTailBody.length;
     // let tempSnakeHead: SnakeCell[] = snakeHead;
@@ -79,8 +92,8 @@ export default function TabTwoScreen() {
     // let tempSnakeHead = [...snakeTailBody][snakeLenght - 1];
     let tempSnakeHead = snakeTailBody[snakeLenght - 1];
     let newSnakeHead = {
-      x: (tempSnakeHead.x += xDir),
-      y: (tempSnakeHead.y += yDir),
+      x: (tempSnakeHead.x += xDir), // xDir
+      y: (tempSnakeHead.y += yDir), // yDir
     };
     // if (
     //   didSnakeRunInTail(
@@ -93,7 +106,23 @@ export default function TabTwoScreen() {
     //   console.log("GAME OVER AUCH!");
     //   setGameIsRunning(false);
     // }
+    // Horizontal
+    if (newSnakeHead.y < 1) {
+      console.log("HELLO", newSnakeHead);
+      newSnakeHead = { x: newSnakeHead.x, y: snakeFieldWidth - 2 };
+    } else if (newSnakeHead.y > snakeFieldWidth - 2) {
+      console.log("HELLO", newSnakeHead);
+      newSnakeHead = { x: newSnakeHead.x, y: 1 };
+    } // Vertical
+    else if (newSnakeHead.x < 1) {
+      console.log("HELLO", newSnakeHead);
+      newSnakeHead = { x: snakeFieldHeight - 2, y: newSnakeHead.y };
+    } else if (newSnakeHead.x > snakeFieldHeight - 2) {
+      console.log("HELLO", newSnakeHead);
+      newSnakeHead = { x: 1, y: newSnakeHead.y };
+    }
     snakeTailBody.push(newSnakeHead);
+
     // tempSnakeField[snakeHead[0].x][snakeHead[0].y] = ".";
     // setSnakeField(tempSnakeField);
     for (
@@ -114,9 +143,7 @@ export default function TabTwoScreen() {
     tempSnakeField[foodCords.x][foodCords.y] = "O";
     if (newSnakeHead.x === foodCords.x && newSnakeHead.y === foodCords.y) {
       snakeTailBody.unshift(tempSnakeHead);
-      setFoodCords(generateFoodCordinates(snakeField));
-      // let tempGamePoints = gamePoints;
-      // setGamePoints((tempGamePoints += 1));
+      setFoodCords(generateFoodCordinates(snakeField, snakeTailBody));
       let tempGamePoints = gamePoints;
       setGamePoints((tempGamePoints += 1));
     }
@@ -182,7 +209,7 @@ export default function TabTwoScreen() {
       // console.log(snakeField);
       // console.log(xDir);
       // }
-    }, 444);
+    }, 1000);
     // c++;
     // console.log("TEST");
 
@@ -212,42 +239,43 @@ export default function TabTwoScreen() {
       <Pressable
         style={{ paddingBottom: 10 }}
         onPress={() => {
-          setXDir(0), setYDir(-1);
+          setXDir(-1), setYDir(0);
         }}
       >
         <Text>UP</Text>
       </Pressable>
+      {/* LEFT PAUSE RIGHT */}
       <View style={{ flexDirection: "row" }}>
         <Pressable
           style={styles.directionButtons}
           onPress={() => {
-            setYDir(0), setXDir(-1);
+            setYDir(-1), setXDir(0);
           }}
         >
           <Text>LEFT</Text>
         </Pressable>
-        <Pressable
+        <Pressable // PAUSE GAME
           style={styles.directionButtons}
           onPress={() => {
             // setXDir(0), setYDir(0);
             setGameIsRunning(toggleGamePause());
           }}
         >
-          <Text>-0-</Text>
+          <Text>PAUSE</Text>
         </Pressable>
-        <Pressable
+        <Pressable // RIGHT
           style={styles.directionButtons}
           onPress={() => {
-            setYDir(0), setXDir(1);
+            setYDir(1), setXDir(0);
           }}
         >
           <Text>RIGHT</Text>
         </Pressable>
       </View>
-      <Pressable
+      <Pressable // DOWN
         style={styles.directionButtons}
         onPress={() => {
-          setXDir(0), setYDir(1);
+          setXDir(1), setYDir(0);
         }}
       >
         <Text>DOWN</Text>
@@ -261,11 +289,11 @@ export default function TabTwoScreen() {
         <Text>Start Game?</Text>
       </Pressable> */}
       {/* <Text>HELL OTHIS IS TAB TWO BUT WHERE IS MODAL?</Text> */}
-      <View style={{ flexDirection: "row" }}>
+      <View>
         {snakeField.map((row, rIndex) => {
           // return <Text>{row}</Text>;
           return (
-            <View key={rIndex}>
+            <View key={rIndex} style={{ flexDirection: "row" }}>
               {row.map((oneCell, index) => {
                 return (
                   <Text key={index} style={styles.oneTextInField}>
@@ -284,10 +312,10 @@ export default function TabTwoScreen() {
 
 const styles = StyleSheet.create({
   // Snake
-  oneRowInGame: {
-    flex: 1,
-    // flexDirection: "row",
-  },
+  // oneRowInGame: {
+  //   flex: 1,
+  //   flexDirection: "column",
+  // },
   oneTextInField: {
     // padding: 10,
     alignItems: "center",
