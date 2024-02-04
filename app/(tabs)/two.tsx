@@ -39,11 +39,13 @@ export default function TabTwoScreen() {
     // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
 
-    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
     // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
     // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
@@ -127,15 +129,13 @@ export default function TabTwoScreen() {
     // setSnakeField(tempSnakeField);
     for (
       let index = 0;
-      index < snakeTailBody.slice(0, snakeLenght).length;
+      index < snakeLenght;
+      // index < snakeTailBody.slice(0, snakeLenght).length;
       index++
     ) {
-      // if(index < snake){
-
-      // }
       tempSnakeField[snakeTailBody[index].x][snakeTailBody[index].y] = "#";
     }
-    tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
+    // tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
     if (!foodIsPlaced) {
       tempSnakeField = generateFood(tempSnakeField);
       setFoodIsPlaced(true);
@@ -290,11 +290,11 @@ export default function TabTwoScreen() {
       </Pressable> */}
       {/* <Text>HELL OTHIS IS TAB TWO BUT WHERE IS MODAL?</Text> */}
       <View>
-        {snakeField.map((row, rIndex) => {
+        {snakeField.slice(1, -1).map((row, rIndex) => {
           // return <Text>{row}</Text>;
           return (
             <View key={rIndex} style={{ flexDirection: "row" }}>
-              {row.map((oneCell, index) => {
+              {row.slice(1, -1).map((oneCell, index) => {
                 return (
                   <Text key={index} style={styles.oneTextInField}>
                     {oneCell}
