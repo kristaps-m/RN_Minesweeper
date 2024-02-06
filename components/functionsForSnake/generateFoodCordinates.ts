@@ -11,8 +11,8 @@ export default function generateFoodCordinates(
   let isInside = true;
   let result: ISnakeCell = { x: h - 1, y: w - 1 };
   while (isInside) {
-    let fieldW = Math.floor(Math.random() * (w - 3)) + 1;
-    let fieldH = Math.floor(Math.random() * (h - 3)) + 1;
+    let fieldW = Math.floor(Math.random() * w);
+    let fieldH = Math.floor(Math.random() * h);
     if (!didSnakeRunInTail(snakeTailBody, { x: fieldH, y: fieldW })) {
       isInside = false;
       result = { x: fieldH, y: fieldW };

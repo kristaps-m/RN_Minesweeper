@@ -12,6 +12,7 @@ export default function TabTwoScreen() {
   const listOfTestCh = ["#", "@", "%", "+", "_", "X"];
   const [gamePoints, setGamePoints] = useState(4);
   const [gameIsRunning, setGameIsRunning] = useState(true);
+  const [gameIsOver, setGameIsOver] = useState(false);
   // const [snakeHead, setSnakeHead] = useState<ISnakeCell>({ x: 3, y: 0 });
   const [snakeTailBody, setTailBody] = useState<ISnakeCell[]>([
     // { x: 0, y: 0 },
@@ -29,26 +30,23 @@ export default function TabTwoScreen() {
   const [xVelocity, setXVelocity] = useState(0);
   const [yDir, setYDir] = useState(0);
   const [snakeField, setSnakeField] = useState([
-    // [" ", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    [".", ".", ".", ".", ".", ".", ".", "."], //, ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
-    // [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [" ", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
   ]);
 
   // const [foodCords, setFoodCords] = useState<ISnakeCell>(
@@ -82,60 +80,79 @@ export default function TabTwoScreen() {
   //   snakeHead.shift();
   // }
   function drawField() {
-    console.log(snakeField);
-    console.log(snakeTailBody);
     let snakeFieldWidth = snakeField[0].length;
     let snakeFieldHeight = snakeField.length;
     let tempSnakeField = [...snakeField];
-    const snakeLenght = snakeTailBody.length;
+    setSnakeField(tempSnakeField);
+    // const snakeLenght = snakeTailBody.length;
     // let tempSnakeHead: SnakeCell[] = snakeHead;
-    // let tempSnakeHead = [...snakeTailBody][snakeLenght - 1];
-    // let tempSnakeHead = snakeTailBody[snakeLenght - 1];
-    // let tempSnakeHead = [...snakeTailBody][snakeLenght - 1];
-    let tempSnakeHead = snakeTailBody[snakeLenght - 1];
+    // let tempSnakeHead = [...snakeTailBody][snakeTailBody.length - 1];
+    // let tempSnakeHead = snakeTailBody[snakeTailBody.length - 1];
+    // let tempSnakeHead = [...snakeTailBody][snakeTailBody.length - 1];
+    let tempSnakeHead = snakeTailBody[snakeTailBody.length - 1];
     let newSnakeHead = {
       x: (tempSnakeHead.x += xDir), // xDir
       y: (tempSnakeHead.y += yDir), // yDir
     };
     // if (
     //   didSnakeRunInTail(
-    //     snakeTailBody.slice(0, snakeLenght - 2),
+    //     snakeTailBody.slice(0, snakeTailBody.length - 2),
     //     tempSnakeHead
     //   ) &&
     //   snakeTailBody.length > 5
     // ) {
-    //   console.log(snakeTailBody.slice(0, snakeLenght - 2), tempSnakeHead);
+    //   console.log(snakeTailBody.slice(0, snakeTailBody.length - 2), tempSnakeHead);
     //   console.log("GAME OVER AUCH!");
     //   setGameIsRunning(false);
     // }
-    // Horizontal
-    if (newSnakeHead.y < 1) {
+    //Horizontal
+    if (newSnakeHead.y < 0) {
+      newSnakeHead = { x: newSnakeHead.x, y: snakeFieldWidth - 1 };
       console.log("HELLO", newSnakeHead);
-      newSnakeHead = { x: newSnakeHead.x, y: snakeFieldWidth - 2 };
-    } else if (newSnakeHead.y > snakeFieldWidth - 2) {
+    } else if (newSnakeHead.y > snakeFieldWidth - 1) {
+      newSnakeHead = { x: newSnakeHead.x, y: 0 };
       console.log("HELLO", newSnakeHead);
-      newSnakeHead = { x: newSnakeHead.x, y: 1 };
     } // Vertical
-    else if (newSnakeHead.x < 1) {
+    else if (newSnakeHead.x < 0) {
+      newSnakeHead = { x: snakeFieldHeight - 1, y: newSnakeHead.y };
       console.log("HELLO", newSnakeHead);
-      newSnakeHead = { x: snakeFieldHeight - 2, y: newSnakeHead.y };
-    } else if (newSnakeHead.x > snakeFieldHeight - 2) {
+    } else if (newSnakeHead.x > snakeFieldHeight - 1) {
+      newSnakeHead = { x: 0, y: newSnakeHead.y };
       console.log("HELLO", newSnakeHead);
-      newSnakeHead = { x: 1, y: newSnakeHead.y };
     }
+    console.log(snakeField);
+    console.log(snakeTailBody);
+    console.log(newSnakeHead, "Before push to tail");
     snakeTailBody.push(newSnakeHead);
+    console.log(newSnakeHead, "Before push to tail");
+    // setSnakeField(tempSnakeField);
 
     // tempSnakeField[snakeHead[0].x][snakeHead[0].y] = ".";
     // setSnakeField(tempSnakeField);
-    for (
-      let index = 0;
-      index < snakeLenght;
-      // index < snakeTailBody.slice(0, snakeLenght).length;
-      index++
-    ) {
-      tempSnakeField[snakeTailBody[index].x][snakeTailBody[index].y] = "#";
+    // for (let index = 0; index < array.length; index++) {
+    //   const element = array[index];
+
+    // }
+
+    for (let index = 0; index < snakeTailBody.length; index++) {
+      let snakeBodyPart = snakeTailBody[index];
+      if (snakeBodyPart.y < 0) {
+        snakeBodyPart = { x: snakeBodyPart.x, y: snakeFieldWidth - 1 };
+        // console.log("HELLO", newSnakeHead);
+      } else if (snakeBodyPart.y > snakeFieldWidth - 1) {
+        snakeBodyPart = { x: snakeBodyPart.x, y: 0 };
+        // console.log("HELLO", newSnakeHead);
+      } // Vertical
+      else if (snakeBodyPart.x < 0) {
+        snakeBodyPart = { x: snakeFieldHeight - 1, y: snakeBodyPart.y };
+        // console.log("HELLO", snakeBodyPart);
+      } else if (snakeBodyPart.x > snakeFieldHeight - 1) {
+        snakeBodyPart = { x: 0, y: snakeBodyPart.y };
+        // console.log("HELLO", newSnakeHead);
+      }
+      tempSnakeField[snakeBodyPart.x][snakeBodyPart.y] = "#";
     }
-    // tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
+    tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
     if (!foodIsPlaced) {
       tempSnakeField = generateFood(tempSnakeField);
       setFoodIsPlaced(true);
@@ -143,12 +160,13 @@ export default function TabTwoScreen() {
     tempSnakeField[foodCords.x][foodCords.y] = "O";
     if (newSnakeHead.x === foodCords.x && newSnakeHead.y === foodCords.y) {
       snakeTailBody.unshift(tempSnakeHead);
+      tempSnakeField[foodCords.x][foodCords.y] = "X";
       setFoodCords(generateFoodCordinates(snakeField, snakeTailBody));
       let tempGamePoints = gamePoints;
       setGamePoints((tempGamePoints += 1));
     }
     setSnakeField(tempSnakeField);
-    snakeTailBody.shift();
+    // snakeTailBody.shift();
   }
 
   function resetFieldLook() {
@@ -175,21 +193,32 @@ export default function TabTwoScreen() {
       // tempSnakeField[snakeHead.x][snakeHead.y] = ".";
       // setSnakeField(tempSnakeField);
 
-      if (gameIsRunning) {
+      if (gameIsRunning && !gameIsOver) {
         resetFieldLook();
         drawField();
-        const snakeLenght = snakeTailBody.length;
-        let tempSnakeHead = snakeTailBody[snakeLenght - 1];
+        snakeTailBody.shift();
+        let tempSnakeHead = snakeTailBody[snakeTailBody.length - 1];
         if (
           didSnakeRunInTail(
-            snakeTailBody.slice(0, snakeLenght - 2),
+            snakeTailBody.slice(0, snakeTailBody.length - 2),
             tempSnakeHead
           ) &&
           snakeTailBody.length > 5
         ) {
-          console.log(snakeTailBody.slice(0, snakeLenght - 2), tempSnakeHead);
+          console.log(
+            snakeTailBody.slice(0, snakeTailBody.length - 2),
+            tempSnakeHead
+          );
           console.log("GAME OVER AUCH!");
           setGameIsRunning(false);
+          setGameIsOver(true);
+          let tempGameField = [...snakeField];
+          const theGameOverText = "GAME OVER!";
+          for (let i = 0; i < theGameOverText.length; i++) {
+            tempGameField[0][i] = theGameOverText[i];
+          }
+
+          setSnakeField(tempGameField);
         }
         // drawHead();
       }
@@ -290,11 +319,11 @@ export default function TabTwoScreen() {
       </Pressable> */}
       {/* <Text>HELL OTHIS IS TAB TWO BUT WHERE IS MODAL?</Text> */}
       <View>
-        {snakeField.slice(1, -1).map((row, rIndex) => {
+        {snakeField.map((row, rIndex) => {
           // return <Text>{row}</Text>;
           return (
             <View key={rIndex} style={{ flexDirection: "row" }}>
-              {row.slice(1, -1).map((oneCell, index) => {
+              {row.map((oneCell, index) => {
                 return (
                   <Text key={index} style={styles.oneTextInField}>
                     {oneCell}
@@ -321,9 +350,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    height: 25,
-    width: 20,
-    margin: 3,
+    height: 18,
+    width: 18,
+    margin: 1,
     borderWidth: 1,
   },
   directionButtons: {
