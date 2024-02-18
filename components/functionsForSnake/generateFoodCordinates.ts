@@ -7,7 +7,6 @@ export default function generateFoodCordinates(
 ): ISnakeCell {
   let w = snakeField[0].length; // 15?
   let h = snakeField.length; // 9?
-  console.log(`w ${w}, h ${h}`);
   let isInside = true;
   let result: ISnakeCell = { x: h - 1, y: w - 1 };
   while (isInside) {

@@ -7,7 +7,7 @@ import EditScreenInfo2 from "../components/EditScreenInfo2";
 export default function ModalScreen2() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Modal2</Text>
+      <Text style={styles.title}>Snake INFO</Text>
       <View
         style={styles.separator}
         lightColor="#eee"

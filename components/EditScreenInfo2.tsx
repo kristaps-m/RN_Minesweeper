@@ -1,9 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 
-// import Colors from "../constants/Colors";
-// import { ExternalLink } from "./ExternalLink";
-// import { MonoText } from "./StyledText";
 import { Text, View } from "./Themed";
 
 export default function EditScreenInfo2({ path }: { path: string }) {
@@ -15,10 +12,10 @@ export default function EditScreenInfo2({ path }: { path: string }) {
           lightColor="rgba(0,0,0,0.8)"
           darkColor="rgba(255,255,255,0.8)"
         >
-          I suggest to stick with default sizes, but if you want to know then:
-          maximum column length = 25, Max row length = 40, maximum mines =
-          colums * row -1.{"\n"}Minumum dimensions is 2 x 2. Minimum mines count
-          is 2.
+          HELLO SNAKE! I suggest to stick with default sizes, but if you want to
+          know then: maximum column length = 25, Max row length = 40, maximum
+          mines = colums * row -1.{"\n"}Minumum dimensions is 2 x 2. Minimum
+          mines count is 2.
         </Text>
       </View>
     </View>
