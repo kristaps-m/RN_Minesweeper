@@ -7,9 +7,10 @@ import {
   returnNewSnakeHeaadAfterHitWall,
 } from "../../components/functionsForSnake/colisionDetection";
 import ISnakeCell from "../../components/models/ISnakeCell";
+import Navigation from "../../components/SnakeNavigationButtons";
 
 export default function TabTwoScreen() {
-  const listOfTestCh = ["@", "%", "O", "Q", "G"];
+  const listOfFoodCh = ["@", "%", "O", "Q", "G"];
   const [foodChar, setFoodChar] = useState("O");
   const [gamePoints, setGamePoints] = useState(4);
   const [gameIsRunning, setGameIsRunning] = useState(true);
@@ -49,11 +50,10 @@ export default function TabTwoScreen() {
     let snakeFieldWidth = snakeField[0].length;
     let snakeFieldHeight = snakeField.length;
     let tempSnakeField: string[][] = [...snakeField];
-    setSnakeField(tempSnakeField);
     let tempSnakeHead: ISnakeCell = snakeTailBody[snakeTailBody.length - 1];
     let newSnakeHead: ISnakeCell = {
-      x: (tempSnakeHead.x += xDir), // xDir
-      y: (tempSnakeHead.y += yDir), // yDir
+      x: (tempSnakeHead.x += xDir),
+      y: (tempSnakeHead.y += yDir),
     };
     newSnakeHead = returnNewSnakeHeaadAfterHitWall(
       newSnakeHead,
@@ -62,6 +62,7 @@ export default function TabTwoScreen() {
     );
 
     snakeTailBody.push(newSnakeHead);
+    setTailBody(snakeTailBody);
 
     for (let index = 0; index < snakeTailBody.length; index++) {
       let snakeBodyPart = snakeTailBody[index];
@@ -73,9 +74,8 @@ export default function TabTwoScreen() {
       tempSnakeField[snakeBodyPart.x][snakeBodyPart.y] = "#";
     }
     tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
+
     if (!foodIsPlaced) {
-      // let foodCordinates = generateFoodCordinates(snakeField, snakeTailBody);
-      // tempSnakeField[foodCordinates.x][foodCordinates.y] = "O";
       tempSnakeField[foodCords.x][foodCords.y] = foodChar;
     }
     if (newSnakeHead.x === foodCords.x && newSnakeHead.y === foodCords.y) {
@@ -85,11 +85,12 @@ export default function TabTwoScreen() {
       let tempGamePoints = gamePoints;
       setGamePoints((tempGamePoints += 1));
       setFoodChar(
-        listOfTestCh[Math.floor(Math.random() * listOfTestCh.length)]
+        listOfFoodCh[Math.floor(Math.random() * listOfFoodCh.length)]
       );
       setFoodIsPlaced(false);
     }
-    setSnakeField(tempSnakeField);
+    // setSnakeField(tempSnakeField);
+    return tempSnakeField;
   }
 
   function generateCleanFieldLook() {
@@ -106,7 +107,7 @@ export default function TabTwoScreen() {
     gameTimerId = setInterval(() => {
       if (gameIsRunning && !gameIsOver) {
         setSnakeField(generateCleanFieldLook());
-        drawField();
+        setSnakeField(drawField());
         snakeTailBody.shift();
         let tempSnakeHead = snakeTailBody[snakeTailBody.length - 1];
         if (
@@ -116,10 +117,6 @@ export default function TabTwoScreen() {
           ) &&
           snakeTailBody.length > 5
         ) {
-          console.log(
-            snakeTailBody.slice(0, snakeTailBody.length - 2),
-            tempSnakeHead
-          );
           console.log("GAME OVER AUCH!");
           setGameIsRunning(false);
           setGameIsOver(true);
@@ -137,7 +134,7 @@ export default function TabTwoScreen() {
     return () => {
       clearInterval(gameTimerId);
     };
-  }, [snakeField, xDir, yDir, foodIsPlaced, gameIsRunning, snakeTailBody]);
+  }, [snakeField, foodIsPlaced, gameIsRunning, snakeTailBody]);
 
   function toggleGamePause() {
     return !gameIsRunning;
@@ -163,49 +160,12 @@ export default function TabTwoScreen() {
           })}
         </View>
         {/* Navigation Buttons */}
-        <Pressable
-          style={styles.directionButtons}
-          onPress={() => {
-            setXDir(-1), setYDir(0);
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>UP</Text>
-        </Pressable>
-        {/* LEFT PAUSE RIGHT */}
-        <View style={{ flexDirection: "row" }}>
-          <Pressable
-            style={styles.directionButtons}
-            onPress={() => {
-              setYDir(-1), setXDir(0);
-            }}
-          >
-            <Text style={{ textAlign: "center" }}>LEFT</Text>
-          </Pressable>
-          <Pressable // PAUSE GAME
-            style={styles.directionButtons}
-            onPress={() => {
-              setGameIsRunning(toggleGamePause());
-            }}
-          >
-            <Text style={{ textAlign: "center" }}>PAUSE</Text>
-          </Pressable>
-          <Pressable // RIGHT
-            style={styles.directionButtons}
-            onPress={() => {
-              setYDir(1), setXDir(0);
-            }}
-          >
-            <Text style={{ textAlign: "center" }}>RIGHT</Text>
-          </Pressable>
-        </View>
-        <Pressable // DOWN
-          style={styles.directionButtons}
-          onPress={() => {
-            setXDir(1), setYDir(0);
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>DOWN</Text>
-        </Pressable>
+        <Navigation
+          setXDir={setXDir}
+          setYDir={setYDir}
+          setGameIsRunning={setGameIsRunning}
+          toggleGamePause={toggleGamePause}
+        />
       </View>
     </View>
   );
@@ -220,14 +180,6 @@ const styles = StyleSheet.create({
     width: 18,
     margin: 1,
     borderWidth: 1,
-  },
-  directionButtons: {
-    alignContent: "center",
-    justifyContent: "center",
-    height: 45,
-    width: 80,
-    margin: 10,
-    backgroundColor: "gray",
   },
   gameContents: {
     alignItems: "center",

@@ -1,3 +1,4 @@
+// THIS FILE IS FOR MineSweeper!
 import { Text, StyleSheet } from "react-native";
 import IOneCell from "./models/IOneCell";
 
