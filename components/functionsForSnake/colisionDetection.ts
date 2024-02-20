@@ -1,6 +1,6 @@
 import ISnakeCell from "../models/ISnakeCell";
 
-export default function didSnakeRunInTail(
+export function didSnakeRunInTail(
   snakeBody: ISnakeCell[],
   snakeHead: ISnakeCell
 ) {
@@ -12,4 +12,24 @@ export default function didSnakeRunInTail(
   }
 
   return false;
+}
+
+export function returnNewSnakeHeaadAfterHitWall(
+  snakeBodyPart: ISnakeCell,
+  snakeFieldWidth: number,
+  snakeFieldHeight: number
+): ISnakeCell {
+  //Horizontal
+  if (snakeBodyPart.y < 0) {
+    snakeBodyPart = { x: snakeBodyPart.x, y: snakeFieldWidth - 1 };
+  } else if (snakeBodyPart.y > snakeFieldWidth - 1) {
+    snakeBodyPart = { x: snakeBodyPart.x, y: 0 };
+  } // Vertical
+  else if (snakeBodyPart.x < 0) {
+    snakeBodyPart = { x: snakeFieldHeight - 1, y: snakeBodyPart.y };
+  } else if (snakeBodyPart.x > snakeFieldHeight - 1) {
+    snakeBodyPart = { x: 0, y: snakeBodyPart.y };
+  }
+
+  return snakeBodyPart;
 }

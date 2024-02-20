@@ -1,4 +1,4 @@
-export default interface SnakeCell {
+export default interface ISnakeCell {
   x: number;
   y: number;
 }

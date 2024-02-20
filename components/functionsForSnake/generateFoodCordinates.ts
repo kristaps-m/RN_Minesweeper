@@ -1,5 +1,5 @@
 import ISnakeCell from "../models/ISnakeCell";
-import didSnakeRunInTail from "./colisionDetection";
+import { didSnakeRunInTail } from "./colisionDetection";
 
 export default function generateFoodCordinates(
   snakeField: string[][],

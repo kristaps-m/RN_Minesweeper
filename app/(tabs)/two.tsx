@@ -2,7 +2,10 @@ import { Pressable, StyleSheet } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { useEffect, useState } from "react";
 import generateFoodCordinates from "../../components/functionsForSnake/generateFoodCordinates";
-import didSnakeRunInTail from "../../components/functionsForSnake/colisionDetection";
+import {
+  didSnakeRunInTail,
+  returnNewSnakeHeaadAfterHitWall,
+} from "../../components/functionsForSnake/colisionDetection";
 import ISnakeCell from "../../components/models/ISnakeCell";
 
 export default function TabTwoScreen() {
@@ -45,39 +48,28 @@ export default function TabTwoScreen() {
   function drawField() {
     let snakeFieldWidth = snakeField[0].length;
     let snakeFieldHeight = snakeField.length;
-    let tempSnakeField = [...snakeField];
+    let tempSnakeField: string[][] = [...snakeField];
     setSnakeField(tempSnakeField);
-    let tempSnakeHead = snakeTailBody[snakeTailBody.length - 1];
-    let newSnakeHead = {
+    let tempSnakeHead: ISnakeCell = snakeTailBody[snakeTailBody.length - 1];
+    let newSnakeHead: ISnakeCell = {
       x: (tempSnakeHead.x += xDir), // xDir
       y: (tempSnakeHead.y += yDir), // yDir
     };
-    //Horizontal
-    if (newSnakeHead.y < 0) {
-      newSnakeHead = { x: newSnakeHead.x, y: snakeFieldWidth - 1 };
-    } else if (newSnakeHead.y > snakeFieldWidth - 1) {
-      newSnakeHead = { x: newSnakeHead.x, y: 0 };
-    } // Vertical
-    else if (newSnakeHead.x < 0) {
-      newSnakeHead = { x: snakeFieldHeight - 1, y: newSnakeHead.y };
-    } else if (newSnakeHead.x > snakeFieldHeight - 1) {
-      newSnakeHead = { x: 0, y: newSnakeHead.y };
-    }
+    newSnakeHead = returnNewSnakeHeaadAfterHitWall(
+      newSnakeHead,
+      snakeFieldWidth,
+      snakeFieldHeight
+    );
+
     snakeTailBody.push(newSnakeHead);
 
     for (let index = 0; index < snakeTailBody.length; index++) {
       let snakeBodyPart = snakeTailBody[index];
-      //Horizontal
-      if (snakeBodyPart.y < 0) {
-        snakeBodyPart = { x: snakeBodyPart.x, y: snakeFieldWidth - 1 };
-      } else if (snakeBodyPart.y > snakeFieldWidth - 1) {
-        snakeBodyPart = { x: snakeBodyPart.x, y: 0 };
-      } // Vertical
-      else if (snakeBodyPart.x < 0) {
-        snakeBodyPart = { x: snakeFieldHeight - 1, y: snakeBodyPart.y };
-      } else if (snakeBodyPart.x > snakeFieldHeight - 1) {
-        snakeBodyPart = { x: 0, y: snakeBodyPart.y };
-      }
+      snakeBodyPart = returnNewSnakeHeaadAfterHitWall(
+        snakeBodyPart,
+        snakeFieldWidth,
+        snakeFieldHeight
+      );
       tempSnakeField[snakeBodyPart.x][snakeBodyPart.y] = "#";
     }
     tempSnakeField[newSnakeHead.x][newSnakeHead.y] = "X";
