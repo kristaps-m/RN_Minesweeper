@@ -1,11 +1,4 @@
-import {
-  Button,
-  FlatList,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import { Button, FlatList, Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 
 import { Text, View } from "../../components/Themed";
 import { useEffect, useState } from "react";
@@ -36,10 +29,7 @@ export default function TabOneScreen() {
     addMineCountNumbers(
       addMinesToField(
         gameFieldSettings.mines,
-        generateNewGameFieldWithOnecellObjects(
-          gameFieldSettings.row,
-          gameFieldSettings.col
-        )
+        generateNewGameFieldWithOnecellObjects(gameFieldSettings.row, gameFieldSettings.col)
       )
     )
   );
@@ -69,9 +59,7 @@ export default function TabOneScreen() {
     // function makeSureTextInputIsSave and condtionals in map function below
     // makes sure that in worst case gameFieldSettings = [10, 10, 5]
     const mapedNList: number[] = [
-      ...textFromTextInput
-        .split(" ")
-        .map((s) => (Number.isNaN(parseInt(s)) ? 1 : parseInt(s))),
+      ...textFromTextInput.split(" ").map((s) => (Number.isNaN(parseInt(s)) ? 1 : parseInt(s))),
     ];
     const listOfN: number[] = makeSureTextInputIsSave(mapedNList);
     onChangeText(listOfN.join(" "));
@@ -82,10 +70,7 @@ export default function TabOneScreen() {
     };
     setGameField(
       addMineCountNumbers(
-        addMinesToField(
-          newGS.mines,
-          generateNewGameFieldWithOnecellObjects(newGS.row, newGS.col)
-        )
+        addMinesToField(newGS.mines, generateNewGameFieldWithOnecellObjects(newGS.row, newGS.col))
       )
     );
     setIsGameOver(false);
@@ -114,9 +99,9 @@ export default function TabOneScreen() {
       } else {
         if (theOneCell.isMine) {
           alert(
-            `GAME OVER row=${theOneCell.col + 1},col=${
-              theOneCell.row + 1
-            }(cell[${theOneCell.col}][${theOneCell.row}])`
+            `GAME OVER row=${theOneCell.col + 1},col=${theOneCell.row + 1}(cell[${
+              theOneCell.col
+            }][${theOneCell.row}])`
           );
           theOneCell.isRevealed = true;
           setIsGameOver(true);
@@ -132,10 +117,7 @@ export default function TabOneScreen() {
               const { row, col } = currentCell;
 
               // Check if the cell is already revealed
-              if (
-                !tempField[row][col].isRevealed &&
-                !tempField[row][col].isFlaged
-              ) {
+              if (!tempField[row][col].isRevealed && !tempField[row][col].isFlaged) {
                 tempField[row][col] = {
                   ...tempField[row][col],
                   isRevealed: true,
@@ -143,10 +125,7 @@ export default function TabOneScreen() {
                 };
 
                 // If the neighboring mines count is 0, add adjacent cells to the queue
-                if (
-                  tempField[row][col].minesCount === 0 &&
-                  !tempField[row][col].isFlaged
-                ) {
+                if (tempField[row][col].minesCount === 0 && !tempField[row][col].isFlaged) {
                   // Define adjacent positions
                   const directions = [
                     { row: -1, col: 0 },
@@ -222,21 +201,11 @@ export default function TabOneScreen() {
     <View style={styles.container}>
       <View style={{ marginBottom: 15 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={styles.displayRCM}>
-            COLS: {textFromTextInput.split(" ")[0]}
-          </Text>
-          <Text style={styles.displayRCM}>
-            ROWS: {textFromTextInput.split(" ")[1]}
-          </Text>
-          <Text style={styles.displayRCM}>
-            MINES: {textFromTextInput.split(" ")[2]}
-          </Text>
+          <Text style={styles.displayRCM}>COLS: {textFromTextInput.split(" ")[0]}</Text>
+          <Text style={styles.displayRCM}>ROWS: {textFromTextInput.split(" ")[1]}</Text>
+          <Text style={styles.displayRCM}>MINES: {textFromTextInput.split(" ")[2]}</Text>
         </View>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          value={textFromTextInput}
-        />
+        <TextInput style={styles.input} onChangeText={onChangeText} value={textFromTextInput} />
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Button title="Begginer!" onPress={() => onChangeText("9 9 10")} />
           <Button title="Medium!" onPress={() => onChangeText("16 16 40")} />
@@ -284,9 +253,7 @@ export default function TabOneScreen() {
                       height: 27,
                       alignContent: "center",
                       justifyContent: "center",
-                      backgroundColor: `${
-                        oneCellFR.isRevealed ? "#969696" : "#454545"
-                      }`,
+                      backgroundColor: `${oneCellFR.isRevealed ? "#969696" : "#454545"}`,
                     }}
                     onPress={() => clickCellHandler(oneCellFR)}
                   >
@@ -330,6 +297,9 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   input: {
+    backgroundColor: "#474747",
+    color: "white",
+    fontWeight: "600",
     margin: 6,
     borderWidth: 1,
     padding: 5,
