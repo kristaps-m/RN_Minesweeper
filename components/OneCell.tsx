@@ -15,40 +15,27 @@ export default function TheOneCellComponent(props: oneCellProps) {
       if (c.isRevealed) {
         return (
           <Text
-            style={[
-              styles.oneCellTextDefault,
-              props.isGameOver && styles.isGameOverStyleRevealed,
-            ]}
+            style={[styles.oneCellTextDefault, props.isGameOver && styles.isGameOverStyleRevealed]}
           >
             ☠︎︎
           </Text>
         );
       } else if (c.isMine && c.isFlaged) {
         return (
-          <Text
-            style={[
-              styles.oneCellTextDefault,
-              props.isGameOver && styles.isMineAndWasFlaged,
-            ]}
-          >
+          <Text style={[styles.oneCellTextDefault, props.isGameOver && styles.isMineAndWasFlaged]}>
             ☠︎︎,F
           </Text>
         );
       } else {
         return (
-          <Text
-            style={[
-              styles.oneCellTextDefault,
-              props.isGameOver && styles.isGameOverStyle,
-            ]}
-          >
+          <Text style={[styles.oneCellTextDefault, props.isGameOver && styles.isGameOverStyle]}>
             ☠︎︎
           </Text>
         );
       }
     } else if (props.isCheatOn && c.isMine) {
       return <Text style={{ color: "white", textAlign: "center" }}>M</Text>;
-    } else if (c.isFlaged) {
+    } else if (c.isFlaged && !c.isRevealed) {
       return (
         <Text
           style={[
@@ -86,7 +73,6 @@ const styles = StyleSheet.create({
   },
   oneCellRevealed: {
     color: "red",
-    // fontWeight: "bold",
   },
   oneCellClosed: {
     color: "green",
@@ -94,18 +80,14 @@ const styles = StyleSheet.create({
   },
   isGameOverStyle: {
     fontSize: 20,
-    // fontWeight: "bold",
     color: "#6464fa", // blue
   },
   isGameOverStyleRevealed: {
     fontSize: 20,
-    // fontWeight: "bold",
     color: "red",
   },
   isFlaged: {
-    // fontSize: 27,
     fontWeight: "bold",
-    // color: `${}`,//"#e56cf5", // #e56cf5 #cf39e3(old)
   },
   isMineAndWasFlaged: {
     fontSize: 11,

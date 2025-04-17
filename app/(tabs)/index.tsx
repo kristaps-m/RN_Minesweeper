@@ -84,16 +84,18 @@ export default function TabOneScreen() {
     setFlagTool(!isFlagToolActive);
   }
 
-  const r = (x: boolean) => {
+  const reveseBool = (x: boolean) => {
     return !x;
   };
   function clickCellHandler(theOneCell: IOneCell) {
     if (!isGameOver) {
       if (isFlagToolActive) {
         const tempField = [...gameField];
-        tempField[theOneCell.row][theOneCell.col].isFlaged = r(
-          tempField[theOneCell.row][theOneCell.col].isFlaged
-        );
+        if (!theOneCell.isRevealed) {
+          tempField[theOneCell.row][theOneCell.col].isFlaged = reveseBool(
+            tempField[theOneCell.row][theOneCell.col].isFlaged
+          );
+        }
 
         setGameField(tempField);
       } else {
